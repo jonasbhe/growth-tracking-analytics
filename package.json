@@ -4,29 +4,28 @@
   "description": "Skeleton app for a DHIS2 web app",
   "main": "src/index.html",
   "scripts": {
-    "coverage":
-      "babel-node node_modules/.bin/isparta cover --root ./src --report text --report html --report lcov node_modules/mocha/bin/_mocha -- --reporter dot --require config/setup.js --recursive test",
-    "prebuild":
-      "rm -rf build && mkdir build && d2-manifest package.json manifest.webapp",
+    "coverage": "babel-node node_modules/.bin/isparta cover --root ./src --report text --report html --report lcov node_modules/mocha/bin/_mocha -- --reporter dot --require config/setup.js --recursive test",
+    "prebuild": "rm -rf build && mkdir build && d2-manifest package.json manifest.webapp",
     "build": "webpack",
-    "postbuild":
-      "cp index.html build/ && cp icon.png build/ && cp node_modules/jquery/dist/jquery.min.js build/ && cp node_modules/babel-polyfill/dist/polyfill.min.js build/ && cp manifest.webapp build/",
-    "test":
-      "mocha --reporter spec --compilers js:babel-core/register --require config/setup.js --recursive test",
-    "test-watch":
-      "mocha --reporter spec --compilers js:babel-core/register --require config/setup.js --recursive test --watch",
-    "lint":
-      "eslint --fix src && ./node_modules/eslint/bin/eslint.js --env node,mocha --global expect,sinon,spy,stub --rule 'no-unused-expressions: 0' test && scss-lint",
+    "postbuild": "cp index.html build/ && cp icon.png build/ && cp node_modules/jquery/dist/jquery.min.js build/ && cp node_modules/babel-polyfill/dist/polyfill.min.js build/ && cp manifest.webapp build/",
+    "test": "mocha --reporter spec --compilers js:babel-core/register --require config/setup.js --recursive test",
+    "test-watch": "mocha --reporter spec --compilers js:babel-core/register --require config/setup.js --recursive test --watch",
+    "lint": "eslint --fix src && ./node_modules/eslint/bin/eslint.js --env node,mocha --global expect,sinon,spy,stub --rule 'no-unused-expressions: 0' test && scss-lint",
     "validate": "npm ls",
     "prestart": "d2-manifest package.json manifest.webapp",
     "start": "webpack-dev-server"
   },
-  "keywords": ["DHIS2", "App"],
+  "keywords": [
+    "DHIS2",
+    "App"
+  ],
   "author": "Mark Polak",
   "license": "BSD-3-Clause",
   "dependencies": {
+    "css-loader": "^0.28.9",
     "jquery": "^2.2.3",
-    "prop-types": "^15.6.0"
+    "prop-types": "^15.6.0",
+    "react-flatpickr": "^3.6.3"
   },
   "devDependencies": {
     "babel-core": "^6.23.1",
@@ -46,11 +45,15 @@
     "react-stub-context": "^0.7.0",
     "react-tap-event-plugin": "^2.0.1",
     "rxjs": "^5.4.3",
-    "style-loader": "^0.18.2",
+    "style-loader": "^0.19.1",
     "webpack": "^3.6.0",
     "webpack-dev-server": "^2.4.1"
   },
-  "pre-commit": ["test", "lint", "validate"],
+  "pre-commit": [
+    "test",
+    "lint",
+    "validate"
+  ],
   "directories": {
     "test": "test"
   },

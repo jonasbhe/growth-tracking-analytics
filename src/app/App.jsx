@@ -16,6 +16,9 @@ const HeaderBar = withStateFrom(headerBarStore$, HeaderBarComponent);
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
 
+import Flatpickr from "react-flatpickr";
+import "flatpickr/dist/themes/material_blue.css";
+
 import {
   getWeightForLength,
   getWeightForAge,
@@ -28,7 +31,9 @@ class App extends React.Component {
   state = {
     rootUnit: null,
     trackedEntityInstances: null,
-    events: null
+    events: null,
+    startDate: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
+    endDate: new Date()
   };
 
   componentWillMount() {
@@ -186,12 +191,20 @@ class App extends React.Component {
 
   render() {
     const { d2 } = this.props;
-    const { rootUnit, ou, events, trackedEntityInstances } = this.state;
+    const {
+      rootUnit,
+      ou,
+      events,
+      trackedEntityInstances,
+      startDate,
+      endDate
+    } = this.state;
 
     if (!rootUnit) return null;
 
     console.log(events);
     console.log(trackedEntityInstances);
+    console.log(startDate, endDate);
 
     return (
       <MuiThemeProvider muiTheme={getMuiTheme()}>
@@ -206,6 +219,30 @@ class App extends React.Component {
           Tracked entity instances:{" "}
           {trackedEntityInstances &&
             Object.values(trackedEntityInstances).length}
+          Start date:
+          <Flatpickr
+            value={startDate}
+            onChange={startDate => {
+              this.setState({ startDate: startDate[0] });
+            }}
+            options={{
+              altInput: true,
+              altFormat: "F j, Y",
+              dateFormat: "Y-m-d"
+            }}
+          />
+          End date:
+          <Flatpickr
+            value={endDate}
+            onChange={endDate => {
+              this.setState({ endDate: endDate[0] });
+            }}
+            options={{
+              altInput: true,
+              altFormat: "F j, Y",
+              dateFormat: "Y-m-d"
+            }}
+          />
         </div>
       </MuiThemeProvider>
     );

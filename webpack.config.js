@@ -52,6 +52,10 @@ const webpackConfig = {
         query: {
           presets: ["es2015", "stage-0", "react"]
         }
+      },
+      {
+        test: /\.css$/,
+        loaders: ["style-loader", "css-loader"]
       }
     ]
   },
