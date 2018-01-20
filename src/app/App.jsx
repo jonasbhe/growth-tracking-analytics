@@ -29,6 +29,7 @@ import {
 
 class App extends React.Component {
   state = {
+    ou: [],
     rootUnit: null,
     trackedEntityInstances: null,
     events: null,
@@ -51,6 +52,10 @@ class App extends React.Component {
 
   onSelectClick = (event, ou) => {
     const orgUnitId = ou.id;
+
+    this.setState(state => ({
+      ou: state.ou[0] === ou.path ? [] : [ou.path]
+    }));
 
     const events =
       orgUnitId &&
@@ -206,43 +211,96 @@ class App extends React.Component {
     console.log(trackedEntityInstances);
     console.log(startDate, endDate);
 
+    /*
+    /**
+     * Custom styling for OU labels
+     */
+    //labelStyle: PropTypes.object,
+
+    /**
+     * Custom styling for the labels of selected OUs
+     */
+    //selectedLabelStyle: PropTypes.object,
+
     return (
       <MuiThemeProvider muiTheme={getMuiTheme()}>
-        <div style={{ marginTop: "4rem" }}>
+        <div
+          style={{
+            marginTop: "4rem",
+            height: "100%"
+          }}
+        >
           <HeaderBar />
-          <OrgUnitTree
-            root={rootUnit}
-            hideCheckboxes={true}
-            onSelectClick={this.onSelectClick}
-          />
-          Events: {events && Object.values(events).length}
-          Tracked entity instances:{" "}
-          {trackedEntityInstances &&
-            Object.values(trackedEntityInstances).length}
-          Start date:
-          <Flatpickr
-            value={startDate}
-            onChange={startDate => {
-              this.setState({ startDate: startDate[0] });
+
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              flexWrap: "nowrap",
+              justifyContent: "flex-start",
+              alignItems: "stretch",
+              alignContent: "stretch",
+              height: "100%"
             }}
-            options={{
-              altInput: true,
-              altFormat: "F j, Y",
-              dateFormat: "Y-m-d"
-            }}
-          />
-          End date:
-          <Flatpickr
-            value={endDate}
-            onChange={endDate => {
-              this.setState({ endDate: endDate[0] });
-            }}
-            options={{
-              altInput: true,
-              altFormat: "F j, Y",
-              dateFormat: "Y-m-d"
-            }}
-          />
+          >
+            <div
+              style={{
+                backgroundColor: "#f3f3f3"
+              }}
+            >
+              <div
+                style={{
+                  backgroundColor: "white",
+                  marginTop: 50,
+                  height: 600,
+                  width: 350,
+                  overflow: "auto"
+                }}
+              >
+                <OrgUnitTree
+                  root={rootUnit}
+                  hideCheckboxes={true}
+                  onSelectClick={this.onSelectClick}
+                  selected={ou}
+                />
+              </div>
+            </div>
+            <div
+              style={{
+                backgroundColor: "yellow",
+                width: "100%"
+              }}
+            >
+              Events: {events && Object.values(events).length}
+              Tracked entity instances:{" "}
+              {trackedEntityInstances &&
+                Object.values(trackedEntityInstances).length}
+              Start date:
+              <Flatpickr
+                value={startDate}
+                onChange={startDate => {
+                  this.setState({ startDate: startDate[0] });
+                }}
+                options={{
+                  altInput: true,
+                  altFormat: "F j, Y",
+                  dateFormat: "Y-m-d"
+                }}
+              />
+              End date:
+              <Flatpickr
+                value={endDate}
+                onChange={endDate => {
+                  this.setState({ endDate: endDate[0] });
+                }}
+                options={{
+                  altInput: true,
+                  altFormat: "F j, Y",
+                  dateFormat: "Y-m-d"
+                }}
+              />
+            </div>
+          </div>
         </div>
       </MuiThemeProvider>
     );

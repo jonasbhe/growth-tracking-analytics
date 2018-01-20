@@ -21,6 +21,7 @@ import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 // The react-tap-event-plugin is required by material-ui to make touch screens work properly with onClick events
 import "react-tap-event-plugin";
 
+import "./app.css";
 import App from "./app/App.jsx";
 
 // Render the a LoadingMask to show the user the app is in loading
