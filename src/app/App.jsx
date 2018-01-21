@@ -7,7 +7,8 @@ import HeaderBarComponent from "d2-ui/lib/app-header/HeaderBar";
 import headerBarStore$ from "d2-ui/lib/app-header/headerBar.store";
 import withStateFrom from "d2-ui/lib/component-helpers/withStateFrom";
 
-import OrgUnitTree from "d2-ui/lib/org-unit-tree/OrgUnitTree.component";
+import Sidebar from "./components/Sidebar.jsx";
+import Mainpage from "./components/Mainpage.jsx";
 
 import injectTapEventPlugin from "react-tap-event-plugin";
 const HeaderBar = withStateFrom(headerBarStore$, HeaderBarComponent);
@@ -15,9 +16,6 @@ const HeaderBar = withStateFrom(headerBarStore$, HeaderBarComponent);
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
-
-import Flatpickr from "react-flatpickr";
-import "flatpickr/dist/themes/material_blue.css";
 
 import {
   getWeightForLength,
@@ -30,9 +28,13 @@ import {
 class App extends React.Component {
   state = {
     ou: [],
-    rootUnit: null,
-    trackedEntityInstances: null,
-    events: null,
+    root: null,
+    eventData: {
+      events: {},
+      averages: {},
+      totals: { wfa: 0, wfl: 0, lhfa: 0, bfa: 0, acfa: 0 }
+    },
+    trackedEntityInstances: {},
     startDate: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
     endDate: new Date()
   };
@@ -45,31 +47,56 @@ class App extends React.Component {
         fields: "id,path,displayName,children::isNotEmpty"
       })
       .then(rootLevel => rootLevel.toArray()[0])
-      .then(rootUnit => {
-        this.setState({ rootUnit });
+      .then(root => {
+        this.setState({ root });
       });
   }
 
   onSelectClick = (event, ou) => {
-    const orgUnitId = ou.id;
-
     this.setState(state => ({
-      ou: state.ou[0] === ou.path ? [] : [ou.path]
+      ouPath: state.ou[0] === ou.path ? [] : [ou.path],
+      ou: ou.id
     }));
+  };
+
+  addVisitToTotals = (value, totals) => {
+    return {
+      SD0_1:
+        Math.abs(value) >= 0 && Math.abs(value) < 1
+          ? totals.SD0_1 + 1
+          : totals.SD0_1,
+      SD1_2:
+        Math.abs(value) >= 1 && Math.abs(value) < 2
+          ? totals.SD1_2 + 1
+          : totals.SD1_2,
+      SD2_3:
+        Math.abs(value) >= 2 && Math.abs(value) < 3
+          ? totals.SD2_3 + 1
+          : totals.SD2_3,
+      SD3: Math.abs(value) >= 3 ? totals.SD3 + 1 : totals.SD3
+    };
+  };
+
+  getEvents = () => {
+    const { ou, startDate, endDate } = this.state;
+
+    const start = startDate.toISOString().substring(0, 10);
+    const end = endDate.toISOString().substring(0, 10);
+    console.log(start, end);
 
     const events =
-      orgUnitId &&
+      ou &&
       this.props.d2.Api.getApi()
         .get(
-          `events.json?orgUnit=tO9CpvxsTx1&program=U1xZvvCVWIM&skipPaging=true` //replace hard-coded OU with ${orgUnitId}
+          `events.json?orgUnit=tO9CpvxsTx1&program=U1xZvvCVWIM&startDate=${start}&endDate=${end}&skipPaging=true` //replace hard-coded OU with ${ou}
         )
         .then(result => result.events.filter(event => event.completedDate));
 
     const trackedEntityInstances =
-      orgUnitId &&
+      ou &&
       this.props.d2.Api.getApi()
         .get(
-          `trackedEntityInstances.json?ou=tO9CpvxsTx1&program=U1xZvvCVWIM&skipPaging=true` //replace hard-coded OU with ${orgUnitId}
+          `trackedEntityInstances.json?ou=tO9CpvxsTx1&program=U1xZvvCVWIM&skipPaging=true` //replace hard-coded OU with ${ou}
         )
         .then(result => {
           return result.trackedEntityInstances.reduce((acc, value) => {
@@ -105,9 +132,8 @@ class App extends React.Component {
       // Value to track the number of skipped events
       let skippedEvents = 0;
 
-      const mappedEvents = events
-        .sort((a, b) => a.eventDate > b.eventDate)
-        .reduce((acc, event, index) => {
+      const eventData = events.sort((a, b) => a.eventDate > b.eventDate).reduce(
+        (acc, event, index) => {
           const patient = trackedEntityInstances[event.trackedEntityInstance];
 
           if (!patient) {
@@ -156,25 +182,77 @@ class App extends React.Component {
             return acc;
           }
 
-          return [
-            ...acc,
-            {
-              index,
-              eventDate,
-              ageInDays,
-              muac,
-              weight,
-              height,
-              bmi,
-              wfl: Math.round(rawWfl * 100) / 100,
-              wfa: Math.round(rawWfa * 100) / 100,
-              lhfa: Math.round(rawLhfa * 100) / 100,
-              bfa: rawBfa === null ? null : Math.round(rawBfa * 100) / 100,
-              acfa: rawAcfa === null ? null : Math.round(rawAcfa * 100) / 100,
-              completedBy: event.completedBy
-            }
-          ];
-        });
+          // If the event has values that exceed 5 SD, it might be bad data, filter it.
+          // TODO: Allow the user to filter this themselves. For example a text box that filters anyone above x number
+          if (
+            Math.abs(rawWfl) > 5 ||
+            Math.abs(rawWfa) > 5 ||
+            Math.abs(rawLhfa) > 5 ||
+            Math.abs(rawBfa) > 5 ||
+            Math.abs(rawAcfa) > 5
+          ) {
+            skippedEvents += 1;
+            return acc;
+          }
+
+          acc.events[event.event] = {
+            index,
+            eventDate,
+            ageInDays,
+            muac,
+            weight,
+            height,
+            bmi,
+            wfl: Math.round(rawWfl * 100) / 100,
+            wfa: Math.round(rawWfa * 100) / 100,
+            lhfa: Math.round(rawLhfa * 100) / 100,
+            bfa: rawBfa === null ? null : Math.round(rawBfa * 100) / 100,
+            acfa: rawAcfa === null ? null : Math.round(rawAcfa * 100) / 100,
+            completedBy: event.completedBy
+          };
+
+          const visitWfl = acc.events[event.event].wfl;
+          const visitWfa = acc.events[event.event].wfa;
+          const visitLhfa = acc.events[event.event].lhfa;
+          const visitBfa = acc.events[event.event].bfa;
+          const visitAcfa = acc.events[event.event].acfa;
+
+          acc.averages = {
+            wfl: acc.averages.wfl + visitWfl,
+            wfa: acc.averages.wfa + visitWfa,
+            lhfa: acc.averages.lhfa + visitLhfa,
+            bfa: acc.averages.bfa + visitBfa,
+            acfa: acc.averages.acfa + visitAcfa
+          };
+
+          acc.totals = {
+            wfl: this.addVisitToTotals(visitWfl, acc.totals.wfl),
+            wfa: this.addVisitToTotals(visitWfa, acc.totals.wfa),
+            lhfa: this.addVisitToTotals(visitLhfa, acc.totals.lhfa),
+            bfa: this.addVisitToTotals(visitBfa, acc.totals.bfa),
+            acfa: this.addVisitToTotals(visitAcfa, acc.totals.acfa)
+          };
+
+          return acc;
+        },
+        {
+          events: {},
+          averages: {
+            wfl: 0,
+            wfa: 0,
+            lhfa: 0,
+            bfa: 0,
+            acfa: 0
+          },
+          totals: {
+            wfl: { SD0_1: 0, SD1_2: 0, SD2_3: 0, SD3: 0 },
+            wfa: { SD0_1: 0, SD1_2: 0, SD2_3: 0, SD3: 0 },
+            lhfa: { SD0_1: 0, SD1_2: 0, SD2_3: 0, SD3: 0 },
+            bfa: { SD0_1: 0, SD1_2: 0, SD2_3: 0, SD3: 0 },
+            acfa: { SD0_1: 0, SD1_2: 0, SD2_3: 0, SD3: 0 }
+          }
+        }
+      );
 
       console.log(
         "Skipped events (missing data values or unable to calculate z-scores):",
@@ -182,7 +260,7 @@ class App extends React.Component {
       );
 
       this.setState({
-        events: mappedEvents,
+        eventData: eventData,
         trackedEntityInstances: result[1]
       });
     });
@@ -194,33 +272,40 @@ class App extends React.Component {
     };
   }
 
+  setStartDate = startDate => this.setState({ startDate: startDate[0] });
+
+  setEndDate = endDate => this.setState({ endDate: endDate[0] });
+
   render() {
     const { d2 } = this.props;
     const {
-      rootUnit,
+      root,
+      ouPath,
       ou,
-      events,
+      eventData,
       trackedEntityInstances,
       startDate,
       endDate
     } = this.state;
 
-    if (!rootUnit) return null;
+    if (!root) return null;
 
-    console.log(events);
+    console.log(eventData);
     console.log(trackedEntityInstances);
     console.log(startDate, endDate);
+    console.log(ou);
 
     /*
-    /**
-     * Custom styling for OU labels
-     */
-    //labelStyle: PropTypes.object,
+    For each visit between the selected dates:
+    - show the total number of patients within each category
+     - count the number of patients between 0-1 SD, 1-2 SD, 2-3 SD, 3+ SD for each indicator, as well as the percentage
+     - display WFL: circle circle circle
+                 on click: show chart trend for that circle (monthly or weekly, toggle)
+               WFA: circle circle circle
+               LFA: circle circle circle
 
-    /**
-     * Custom styling for the labels of selected OUs
-     */
-    //selectedLabelStyle: PropTypes.object,
+
+    */
 
     return (
       <MuiThemeProvider muiTheme={getMuiTheme()}>
@@ -243,63 +328,20 @@ class App extends React.Component {
               height: "100%"
             }}
           >
-            <div
-              style={{
-                backgroundColor: "#f3f3f3"
-              }}
-            >
-              <div
-                style={{
-                  backgroundColor: "white",
-                  marginTop: 50,
-                  height: 600,
-                  width: 350,
-                  overflow: "auto"
-                }}
-              >
-                <OrgUnitTree
-                  root={rootUnit}
-                  hideCheckboxes={true}
-                  onSelectClick={this.onSelectClick}
-                  selected={ou}
-                />
-              </div>
-            </div>
-            <div
-              style={{
-                backgroundColor: "yellow",
-                width: "100%"
-              }}
-            >
-              Events: {events && Object.values(events).length}
-              Tracked entity instances:{" "}
-              {trackedEntityInstances &&
-                Object.values(trackedEntityInstances).length}
-              Start date:
-              <Flatpickr
-                value={startDate}
-                onChange={startDate => {
-                  this.setState({ startDate: startDate[0] });
-                }}
-                options={{
-                  altInput: true,
-                  altFormat: "F j, Y",
-                  dateFormat: "Y-m-d"
-                }}
-              />
-              End date:
-              <Flatpickr
-                value={endDate}
-                onChange={endDate => {
-                  this.setState({ endDate: endDate[0] });
-                }}
-                options={{
-                  altInput: true,
-                  altFormat: "F j, Y",
-                  dateFormat: "Y-m-d"
-                }}
-              />
-            </div>
+            <Sidebar
+              root={root}
+              onSelectClick={this.onSelectClick}
+              ouPath={ouPath}
+            />
+            <Mainpage
+              eventData={eventData}
+              trackedEntityInstances={trackedEntityInstances}
+              startDate={startDate}
+              endDate={endDate}
+              setStartDate={this.setStartDate}
+              setEndDate={this.setEndDate}
+              getEvents={this.getEvents}
+            />
           </div>
         </div>
       </MuiThemeProvider>

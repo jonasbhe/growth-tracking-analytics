@@ -19,3 +19,10 @@ body {
 #app {
   height: calc(100% - 4rem);
 }
+
+input.flatpickr-input {
+  height: 3rem;
+  font-size: 1.3rem;
+  text-align: center;
+  color: rgb(119, 119, 119);
+}
