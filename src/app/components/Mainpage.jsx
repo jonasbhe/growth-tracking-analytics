@@ -1,10 +1,12 @@
 import React from "react";
 
 import Datepicker from "./Datepicker.jsx";
+import Results from "./Results.jsx";
 
 class Mainpage extends React.Component {
   render() {
     const {
+      ouName,
       eventData,
       trackedEntityInstances,
       startDate,
@@ -14,7 +16,16 @@ class Mainpage extends React.Component {
       getEvents
     } = this.props;
 
-    const { events, averages, totals } = eventData;
+    const {
+      events,
+      averages,
+      totals,
+      distribution,
+      skipped,
+      timeline
+    } = eventData;
+
+    console.log(timeline);
 
     return (
       <div
@@ -26,13 +37,23 @@ class Mainpage extends React.Component {
           style={{
             textAlign: "center",
             fontSize: "2.5rem",
-            margin: 20,
+            margin: 10,
             color: "#777777"
           }}
         >
-          Growth Tracking Aggregation App
+          Growth Tracking Analytics App
         </div>
         <hr style={{ border: "1px solid #f3f3f3" }} />
+        <div
+          style={{
+            textAlign: "center",
+            fontSize: "1.8rem",
+            margin: 10,
+            color: "#777777"
+          }}
+        >
+          {ouName || "Choose an organization unit."}
+        </div>
         <div
           style={{
             display: "flex",
@@ -47,79 +68,48 @@ class Mainpage extends React.Component {
           />
 
           <Datepicker label="End date:" date={endDate} setDate={setEndDate} />
-
-          <div
+        </div>
+        <div
+          style={{
+            textAlign: "center",
+            marginBottom: 10
+          }}
+        >
+          <button
             style={{
-              display: "flex",
-              alignItems: "flex-end",
-              marginBottom: 10
+              height: 42,
+              background: "unset",
+              cursor: "pointer",
+              backgroundColor: "#296596",
+              color: "white",
+              fontSize: "1.1rem",
+              paddingLeft: "1rem",
+              paddingRight: "1rem",
+              outline: "none"
             }}
+            //disabled={!ouName} // TODO: Disable button if no org unit is selecged
+            onClick={getEvents}
           >
-            <button
-              style={{
-                height: 42,
-                background: "unset",
-                cursor: "pointer",
-                backgroundColor: "#296596",
-                color: "white",
-                fontWeight: "bold",
-                fontSize: "1rem",
-                paddingLeft: "1rem",
-                paddingRight: "1rem",
-                outline: "none"
-              }}
-              onClick={getEvents}
-            >
-              Go
-            </button>
-          </div>
+            Get events
+          </button>
         </div>
-
         <hr style={{ border: "1px solid #f3f3f3" }} />
-
-        <h1>Filter options:</h1>
-
+        <h3>Filter options:</h3>
         <p>Girls || Boys || All</p>
-
         <p>By age</p>
-
+        <h3>Chart options:</h3>
         <p>By week || By month</p>
-
-        <div>
-          <p>Events: {events && Object.values(events).length}</p>
-          <p>
-            Tracked entity instances:{" "}
-            {trackedEntityInstances &&
-              Object.values(trackedEntityInstances).length}
-          </p>
-          <p>Averages:</p>
-          <p>WFL: {averages.wfa / Object.values(events).length}</p>
-          <p>WFA: {averages.wfl / Object.values(events).length}</p>
-          <p>LHFA: {averages.lhfa / Object.values(events).length}</p>
-          <p>BFA: {averages.bfa / Object.values(events).length}</p>
-          <p>ACFA: {averages.acfa / Object.values(events).length}</p>
-          <p>Totals:</p>
-          <p>
-            WFL: {totals.wfl.SD0_1} {totals.wfl.SD1_2} {totals.wfl.SD2_3}{" "}
-            {totals.wfl.SD3}
-          </p>
-          <p>
-            WFA: {totals.wfa.SD0_1} {totals.wfa.SD1_2} {totals.wfa.SD2_3}{" "}
-            {totals.wfa.SD3}
-          </p>
-          <p>
-            LHFA: {totals.lhfa.SD0_1} {totals.lhfa.SD1_2} {totals.lhfa.SD2_3}{" "}
-            {totals.lhfa.SD3}
-          </p>
-          <p>
-            BFA: {totals.bfa.SD0_1} {totals.bfa.SD1_2} {totals.bfa.SD2_3}{" "}
-            {totals.bfa.SD3}
-          </p>
-          <p>
-            ACFA: {totals.acfa.SD0_1} {totals.acfa.SD1_2} {totals.acfa.SD2_3}{" "}
-            {totals.acfa.SD3}
-          </p>
-        </div>
+        <p>Skipped events: {Object.values(skipped).length}</p>
+        <hr />
+        Tab to switch between results, filterable visit list, etc
+        <Results
+          events={events}
+          averages={averages}
+          distribution={distribution}
+          totals={totals}
+          timeline={timeline}
+        />
+        List of trackedEntityInstances sortable by different indicator severity
       </div>
     );
   }

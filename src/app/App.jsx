@@ -27,12 +27,18 @@ import {
 
 class App extends React.Component {
   state = {
-    ou: [],
+    ou: ["hV87OCHgO4v"],
+    ouPath: [
+      "/Hjw70Lodtf2/psfB4ksRKp2/DG8h5ijGxgO/sFGfRP4wPqe/oiAbfOiho08/hV87OCHgO4v"
+    ],
+    ouName: null,
     root: null,
     eventData: {
       events: {},
       averages: {},
-      totals: { wfa: 0, wfl: 0, lhfa: 0, bfa: 0, acfa: 0 }
+      totals: { wfa: 0, wfl: 0, lhfa: 0, bfa: 0, acfa: 0 },
+      skipped: {},
+      timeline: { weekly: { wfa: 0, wfl: 0, lhfa: 0, bfa: 0, acfa: 0 } }
     },
     trackedEntityInstances: {},
     startDate: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
@@ -53,9 +59,11 @@ class App extends React.Component {
   }
 
   onSelectClick = (event, ou) => {
+    console.log(ou.path);
     this.setState(state => ({
       ouPath: state.ou[0] === ou.path ? [] : [ou.path],
-      ou: ou.id
+      ou: ou.id,
+      ouName: ou.displayName
     }));
   };
 
@@ -82,13 +90,12 @@ class App extends React.Component {
 
     const start = startDate.toISOString().substring(0, 10);
     const end = endDate.toISOString().substring(0, 10);
-    console.log(start, end);
 
     const events =
       ou &&
       this.props.d2.Api.getApi()
         .get(
-          `events.json?orgUnit=tO9CpvxsTx1&program=U1xZvvCVWIM&startDate=${start}&endDate=${end}&skipPaging=true` //replace hard-coded OU with ${ou}
+          `events.json?orgUnit=${ou}&program=U1xZvvCVWIM&startDate=${start}&endDate=${end}&skipPaging=true`
         )
         .then(result => result.events.filter(event => event.completedDate));
 
@@ -96,7 +103,7 @@ class App extends React.Component {
       ou &&
       this.props.d2.Api.getApi()
         .get(
-          `trackedEntityInstances.json?ou=tO9CpvxsTx1&program=U1xZvvCVWIM&skipPaging=true` //replace hard-coded OU with ${ou}
+          `trackedEntityInstances.json?ou=${ou}&program=U1xZvvCVWIM&skipPaging=true`
         )
         .then(result => {
           return result.trackedEntityInstances.reduce((acc, value) => {
@@ -129,15 +136,13 @@ class App extends React.Component {
       const events = result[0];
       const trackedEntityInstances = result[1];
 
-      // Value to track the number of skipped events
-      let skippedEvents = 0;
-
       const eventData = events.sort((a, b) => a.eventDate > b.eventDate).reduce(
         (acc, event, index) => {
           const patient = trackedEntityInstances[event.trackedEntityInstance];
 
+          // If patient does not exist, filter it.
           if (!patient) {
-            skippedEvents += 1;
+            acc.skipped[event.event] = event;
             return acc;
           }
 
@@ -164,6 +169,7 @@ class App extends React.Component {
 
           // If the event is missing muac, weight, or height, filter it.
           if (!muac || !height || !weight) {
+            acc.skipped[event.event] = event;
             skippedEvents += 1;
             return acc;
           }
@@ -178,7 +184,7 @@ class App extends React.Component {
 
           // If the event does not have valid WFL, WFA or LHFA data, filter it.
           if (!rawWfl || !rawWfa || !rawLhfa) {
-            skippedEvents += 1;
+            acc.skipped[event.event] = event;
             return acc;
           }
 
@@ -191,7 +197,7 @@ class App extends React.Component {
             Math.abs(rawBfa) > 5 ||
             Math.abs(rawAcfa) > 5
           ) {
-            skippedEvents += 1;
+            acc.skipped[event.event] = event;
             return acc;
           }
 
@@ -217,6 +223,45 @@ class App extends React.Component {
           const visitBfa = acc.events[event.event].bfa;
           const visitAcfa = acc.events[event.event].acfa;
 
+          const day = Math.floor(
+            (Date.parse(event.eventDate) - Date.parse(startDate)) / 2592000000
+          );
+
+          acc.timeline = {
+            weekly: {
+              wfl: {
+                ...acc.timeline.weekly.wfl,
+                [day]: acc.timeline.weekly.wfl[day]
+                  ? [...acc.timeline.weekly.wfl[day], visitWfl]
+                  : [visitWfl]
+              },
+              wfa: {
+                ...acc.timeline.weekly.wfa,
+                [day]: acc.timeline.weekly.wfa[day]
+                  ? [...acc.timeline.weekly.wfa[day], visitWfa]
+                  : [visitWfa]
+              },
+              lhfa: {
+                ...acc.timeline.weekly.lhfa,
+                [day]: acc.timeline.weekly.lhfa[day]
+                  ? [...acc.timeline.weekly.lhfa[day], visitLhfa]
+                  : [visitLhfa]
+              },
+              bfa: {
+                ...acc.timeline.weekly.bfa,
+                [day]: acc.timeline.weekly.bfa[day]
+                  ? [...acc.timeline.weekly.bfa[day], visitBfa]
+                  : [visitBfa]
+              },
+              acfa: {
+                ...acc.timeline.weekly.acfa,
+                [day]: acc.timeline.weekly.acfa[day]
+                  ? [...acc.timeline.weekly.acfa[day], visitAcfa]
+                  : [visitAcfa]
+              }
+            }
+          };
+
           acc.averages = {
             wfl: acc.averages.wfl + visitWfl,
             wfa: acc.averages.wfa + visitWfa,
@@ -232,6 +277,41 @@ class App extends React.Component {
             bfa: this.addVisitToTotals(visitBfa, acc.totals.bfa),
             acfa: this.addVisitToTotals(visitAcfa, acc.totals.acfa)
           };
+
+          const roundedWfl = Math.round(visitWfl * 10) / 10;
+          if (acc.distribution.wfl[roundedWfl]) {
+            acc.distribution.wfl[roundedWfl] += 1;
+          } else {
+            acc.distribution.wfl[roundedWfl] = 1;
+          }
+
+          const roundedWfa = Math.round(visitWfa * 10) / 10;
+          if (acc.distribution.wfa[roundedWfa]) {
+            acc.distribution.wfa[roundedWfa] += 1;
+          } else {
+            acc.distribution.wfa[roundedWfa] = 1;
+          }
+
+          const roundedLhfa = Math.round(visitLhfa * 10) / 10;
+          if (acc.distribution.lhfa[roundedLhfa]) {
+            acc.distribution.lhfa[roundedLhfa] += 1;
+          } else {
+            acc.distribution.lhfa[roundedLhfa] = 1;
+          }
+
+          const roundedBfa = Math.round(visitBfa * 10) / 10;
+          if (acc.distribution.bfa[roundedBfa]) {
+            acc.distribution.bfa[roundedBfa] += 1;
+          } else {
+            acc.distribution.bfa[roundedBfa] = 1;
+          }
+
+          const roundedAcfa = Math.round(visitAcfa * 10) / 10;
+          if (acc.distribution.acfa[roundedAcfa]) {
+            acc.distribution.acfa[roundedAcfa] += 1;
+          } else {
+            acc.distribution.acfa[roundedAcfa] = 1;
+          }
 
           return acc;
         },
@@ -250,13 +330,19 @@ class App extends React.Component {
             lhfa: { SD0_1: 0, SD1_2: 0, SD2_3: 0, SD3: 0 },
             bfa: { SD0_1: 0, SD1_2: 0, SD2_3: 0, SD3: 0 },
             acfa: { SD0_1: 0, SD1_2: 0, SD2_3: 0, SD3: 0 }
+          },
+          distribution: {
+            wfl: {},
+            wfa: {},
+            lhfa: {},
+            bfa: {},
+            acfa: {}
+          },
+          skipped: {},
+          timeline: {
+            weekly: { wfa: 0, wfl: 0, lhfa: 0, bfa: 0, acfa: 0 }
           }
         }
-      );
-
-      console.log(
-        "Skipped events (missing data values or unable to calculate z-scores):",
-        skippedEvents
       );
 
       this.setState({
@@ -282,6 +368,7 @@ class App extends React.Component {
       root,
       ouPath,
       ou,
+      ouName,
       eventData,
       trackedEntityInstances,
       startDate,
@@ -289,23 +376,6 @@ class App extends React.Component {
     } = this.state;
 
     if (!root) return null;
-
-    console.log(eventData);
-    console.log(trackedEntityInstances);
-    console.log(startDate, endDate);
-    console.log(ou);
-
-    /*
-    For each visit between the selected dates:
-    - show the total number of patients within each category
-     - count the number of patients between 0-1 SD, 1-2 SD, 2-3 SD, 3+ SD for each indicator, as well as the percentage
-     - display WFL: circle circle circle
-                 on click: show chart trend for that circle (monthly or weekly, toggle)
-               WFA: circle circle circle
-               LFA: circle circle circle
-
-
-    */
 
     return (
       <MuiThemeProvider muiTheme={getMuiTheme()}>
@@ -334,6 +404,7 @@ class App extends React.Component {
               ouPath={ouPath}
             />
             <Mainpage
+              ouName={ouName}
               eventData={eventData}
               trackedEntityInstances={trackedEntityInstances}
               startDate={startDate}

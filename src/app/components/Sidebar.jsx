@@ -27,6 +27,10 @@ class Sidebar extends React.Component {
             hideCheckboxes={true}
             onSelectClick={onSelectClick}
             selected={ouPath}
+            // TODO: rmeove this property after development
+            initiallyExpanded={[
+              "/Hjw70Lodtf2/psfB4ksRKp2/DG8h5ijGxgO/sFGfRP4wPqe/oiAbfOiho08/hV87OCHgO4v"
+            ]}
           />
         </div>
       </div>
