@@ -59,11 +59,11 @@ class App extends React.Component {
   }
 
   onSelectClick = (event, ou) => {
-    console.log(ou.path);
     this.setState(state => ({
       ouPath: state.ou[0] === ou.path ? [] : [ou.path],
       ou: ou.id,
-      ouName: ou.displayName
+      ouName: ou.displayName,
+      ouLevel: ou.path.split("/").length
     }));
   };
 
@@ -95,7 +95,7 @@ class App extends React.Component {
       ou &&
       this.props.d2.Api.getApi()
         .get(
-          `events.json?orgUnit=${ou}&program=U1xZvvCVWIM&startDate=${start}&endDate=${end}&skipPaging=true`
+          `events.json?orgUnit=${ou}&program=U1xZvvCVWIM&ouMode=DESCENDANTS&startDate=${start}&endDate=${end}&skipPaging=true`
         )
         .then(result => result.events.filter(event => event.completedDate));
 
@@ -103,7 +103,7 @@ class App extends React.Component {
       ou &&
       this.props.d2.Api.getApi()
         .get(
-          `trackedEntityInstances.json?ou=${ou}&program=U1xZvvCVWIM&skipPaging=true`
+          `trackedEntityInstances.json?ou=${ou}&ouMode=DESCENDANTS&program=U1xZvvCVWIM&skipPaging=true`
         )
         .then(result => {
           return result.trackedEntityInstances.reduce((acc, value) => {
@@ -170,7 +170,6 @@ class App extends React.Component {
           // If the event is missing muac, weight, or height, filter it.
           if (!muac || !height || !weight) {
             acc.skipped[event.event] = event;
-            skippedEvents += 1;
             return acc;
           }
 

@@ -144,15 +144,15 @@ class Result extends React.Component {
           zoneAxis: "y",
           zones: [
             {
-              value: -2.9,
+              value: -3,
               color: "#777777"
             },
             {
-              value: -1.9,
+              value: -2,
               color: "#ff7070"
             },
             {
-              value: -0.9,
+              value: -1,
               color: "#dede32"
             },
             {

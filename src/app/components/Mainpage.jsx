@@ -97,8 +97,6 @@ class Mainpage extends React.Component {
         <h3>Filter options:</h3>
         <p>Girls || Boys || All</p>
         <p>By age</p>
-        <h3>Chart options:</h3>
-        <p>By week || By month</p>
         <p>Skipped events: {Object.values(skipped).length}</p>
         <hr />
         Tab to switch between results, filterable visit list, etc
