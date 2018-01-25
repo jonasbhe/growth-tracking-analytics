@@ -1,7 +1,7 @@
-import React from "react";
-import Result from "./Result.jsx";
+import React from 'react';
+import Result from './Result.jsx';
 
-import getColor from "../../formulas/getColor.js";
+import getColor from '../../formulas/getColor.js';
 
 class Results extends React.Component {
   render() {
@@ -13,9 +13,9 @@ class Results extends React.Component {
       <div>
         <div
           style={{
-            fontSize: "1.8rem",
+            fontSize: '1.8rem',
             margin: 10,
-            color: "#777777"
+            color: '#777777'
           }}
         >
           Results for {Object.values(events).length} events:
@@ -23,9 +23,9 @@ class Results extends React.Component {
 
         <div
           style={{
-            display: "flex",
-            flexWrap: "wrap",
-            flexDirection: "column"
+            display: 'flex',
+            flexWrap: 'wrap',
+            flexDirection: 'column'
           }}
         >
           <Result

@@ -1,7 +1,7 @@
-import React from "react";
-import ReactHighcharts from "react-highcharts";
+import React from 'react';
+import ReactHighcharts from 'react-highcharts';
 
-import getColor from "../../formulas/getColor";
+import getColor from '../../formulas/getColor';
 
 class Result extends React.Component {
   state = {
@@ -46,22 +46,22 @@ class Result extends React.Component {
 
     const distributionConfig = {
       chart: {
-        type: "column"
+        type: 'column'
       },
       title: {
-        text: "Z-score Distribution"
+        text: 'Z-score Distribution'
       },
       xAxis: {
         crosshair: true,
         min: distributionMin,
         max: Math.abs(distributionMin),
         title: {
-          text: "Z-score"
+          text: 'Z-score'
         }
       },
       yAxis: {
         title: {
-          text: "Number of occurences"
+          text: 'Number of occurences'
         }
       },
       tooltip: false,
@@ -72,35 +72,35 @@ class Result extends React.Component {
       series: [
         {
           data: distributionData,
-          zoneAxis: "x",
+          zoneAxis: 'x',
           zones: [
             {
               value: -2.9,
-              color: "#777777"
+              color: '#777777'
             },
             {
               value: -1.9,
-              color: "#ff7070"
+              color: '#ff7070'
             },
             {
               value: -0.9,
-              color: "#dede32"
+              color: '#dede32'
             },
             {
               value: 1,
-              color: "#BADA55"
+              color: '#BADA55'
             },
             {
               value: 2,
-              color: "#dede32"
+              color: '#dede32'
             },
             {
               value: 3,
-              color: "#ff7070"
+              color: '#ff7070'
             },
             {
               value: 1000,
-              color: "#777777"
+              color: '#777777'
             }
           ],
 
@@ -112,21 +112,21 @@ class Result extends React.Component {
 
     const timelineConfig = {
       chart: {
-        type: "spline"
+        type: 'spline'
       },
       title: {
-        text: "Z-score Timeline"
+        text: 'Z-score Timeline'
       },
       xAxis: {
         crosshair: true,
         title: {
-          text: "Month"
+          text: 'Month'
         }
       },
       yAxis: {
         crosshair: true,
         title: {
-          text: "Z-score"
+          text: 'Z-score'
         }
       },
       tooltip: false,
@@ -141,35 +141,35 @@ class Result extends React.Component {
           marker: {
             enabled: false
           },
-          zoneAxis: "y",
+          zoneAxis: 'y',
           zones: [
             {
               value: -3,
-              color: "#777777"
+              color: '#777777'
             },
             {
               value: -2,
-              color: "#ff7070"
+              color: '#ff7070'
             },
             {
               value: -1,
-              color: "#dede32"
+              color: '#dede32'
             },
             {
               value: 1,
-              color: "#BADA55"
+              color: '#BADA55'
             },
             {
               value: 2,
-              color: "#dede32"
+              color: '#dede32'
             },
             {
               value: 3,
-              color: "#ff7070"
+              color: '#ff7070'
             },
             {
               value: 1000,
-              color: "#777777"
+              color: '#777777'
             }
           ],
 
@@ -183,25 +183,25 @@ class Result extends React.Component {
       <div>
         <div
           style={{
-            fontSize: "1.8rem",
+            fontSize: '1.8rem',
             margin: 10,
-            color: "#777777"
+            color: '#777777'
           }}
         >
           {label}
         </div>
-        <div style={{ display: "flex", textAlign: "center" }}>
-          <div style={{ flex: "auto" }}>
+        <div style={{ display: 'flex', textAlign: 'center' }}>
+          <div style={{ flex: 'auto' }}>
             Average z-score
             <div>
               <div
                 // Circle style
                 style={{
-                  borderRadius: "100%",
+                  borderRadius: '100%',
                   width: 80,
                   height: 80,
                   border: `6px solid ${getColor(zscore)}`,
-                  margin: "auto"
+                  margin: 'auto'
                 }}
               >
                 <div
@@ -209,8 +209,8 @@ class Result extends React.Component {
                   style={{
                     color: getColor(zscore),
                     paddingTop: 15,
-                    fontWeight: "bold",
-                    fontSize: `2.7rem`,
+                    fontWeight: 'bold',
+                    fontSize: '2.7rem',
                     marginTop: 2
                   }}
                 >
@@ -219,14 +219,14 @@ class Result extends React.Component {
               </div>
             </div>
           </div>
-          <div style={{ flex: "auto" }}>
-            <div style={{ display: "flex" }}>
+          <div style={{ flex: 'auto' }}>
+            <div style={{ display: 'flex' }}>
               <div
                 style={{
-                  flex: "auto",
-                  display: "flex",
-                  flexDirection: "column",
-                  textAlign: "left"
+                  flex: 'auto',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  textAlign: 'left'
                 }}
               >
                 <div>SD-range</div>
@@ -237,10 +237,10 @@ class Result extends React.Component {
               </div>
               <div
                 style={{
-                  flex: "auto",
-                  display: "flex",
-                  flexDirection: "column",
-                  textAlign: "right"
+                  flex: 'auto',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  textAlign: 'right'
                 }}
               >
                 <div>Total</div>
@@ -251,10 +251,10 @@ class Result extends React.Component {
               </div>
               <div
                 style={{
-                  flex: "auto",
-                  display: "flex",
-                  flexDirection: "column",
-                  textAlign: "right"
+                  flex: 'auto',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  textAlign: 'right'
                 }}
               >
                 <div>Percentage</div>
@@ -267,16 +267,16 @@ class Result extends React.Component {
           </div>
           <button
             style={{
-              flex: "auto",
+              flex: 'auto',
               height: 42,
-              background: "unset",
-              cursor: "pointer",
-              backgroundColor: "#296596",
-              color: "white",
-              fontSize: "1.1rem",
-              paddingLeft: "1rem",
-              paddingRight: "1rem",
-              outline: "none"
+              background: 'unset',
+              cursor: 'pointer',
+              backgroundColor: '#296596',
+              color: 'white',
+              fontSize: '1.1rem',
+              paddingLeft: '1rem',
+              paddingRight: '1rem',
+              outline: 'none'
             }}
             onClick={this.toggleDistribution}
           >
@@ -284,16 +284,16 @@ class Result extends React.Component {
           </button>
           <button
             style={{
-              flex: "auto",
+              flex: 'auto',
               height: 42,
-              background: "unset",
-              cursor: "pointer",
-              backgroundColor: "#296596",
-              color: "white",
-              fontSize: "1.1rem",
-              paddingLeft: "1rem",
-              paddingRight: "1rem",
-              outline: "none"
+              background: 'unset',
+              cursor: 'pointer',
+              backgroundColor: '#296596',
+              color: 'white',
+              fontSize: '1.1rem',
+              paddingLeft: '1rem',
+              paddingRight: '1rem',
+              outline: 'none'
             }}
             onClick={this.toggleTimeline}
           >
@@ -303,7 +303,7 @@ class Result extends React.Component {
 
         <div
           style={{
-            borderBottom: "1px solid #777777"
+            borderBottom: '1px solid #777777'
           }}
         >
           {showDistribution && <ReactHighcharts config={distributionConfig} />}
