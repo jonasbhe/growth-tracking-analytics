@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
@@ -29,7 +30,8 @@ class App extends React.Component {
     ouLevel: null,
     root: null,
     startDate: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
-    endDate: new Date()
+    endDate: new Date(),
+    loading: false
   };
 
   getChildContext() {
@@ -63,6 +65,8 @@ class App extends React.Component {
   getEvents = () => {
     const { ou, startDate, endDate } = this.state;
 
+    this.setState({ loading: true });
+
     const start = startDate.toISOString().substring(0, 10);
     const end = endDate.toISOString().substring(0, 10);
 
@@ -82,13 +86,12 @@ class App extends React.Component {
         )
         .then(result => result.trackedEntityInstances);
 
-    // Show loading indicator here
-
     Promise.all([events, trackedEntityInstances]).then(result => {
       // Disable loading indicator here
       this.setState({
         events: result[0],
-        trackedEntityInstances: result[1]
+        trackedEntityInstances: result[1],
+        loading: false
       });
     });
   };
@@ -106,7 +109,8 @@ class App extends React.Component {
       events,
       trackedEntityInstances,
       startDate,
-      endDate
+      endDate,
+      loading
     } = this.state;
 
     if (!root) return null;
@@ -147,6 +151,7 @@ class App extends React.Component {
               setStartDate={this.setStartDate}
               setEndDate={this.setEndDate}
               getEvents={this.getEvents}
+              loading={loading}
             />
           </div>
         </div>

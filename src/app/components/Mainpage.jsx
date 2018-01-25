@@ -1,4 +1,5 @@
 import React from 'react';
+import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
 
 import Datepicker from './Datepicker.jsx';
 import Results from './Results.jsx';
@@ -295,7 +296,8 @@ class Mainpage extends React.Component {
       setStartDate,
       endDate,
       setEndDate,
-      getEvents
+      getEvents,
+      loading
     } = this.props;
 
     const trackedEntityInstances = this.mapTrackedEntityInstances();
@@ -369,14 +371,15 @@ class Mainpage extends React.Component {
               height: 42,
               background: 'unset',
               cursor: 'pointer',
-              backgroundColor: !ouName || ouLevel < 4 ? '#9c9c9c' : '#296596',
+              backgroundColor:
+                !ouName || ouLevel < 4 || loading ? '#9c9c9c' : '#296596',
               color: 'white',
               fontSize: '1.1rem',
               paddingLeft: '1rem',
               paddingRight: '1rem',
               outline: 'none'
             }}
-            disabled={!ouName || ouLevel < 4}
+            disabled={!ouName || ouLevel < 4 || loading}
             onClick={getEvents}
           >
             Get events
@@ -385,30 +388,57 @@ class Mainpage extends React.Component {
 
         <hr style={{ border: '1px solid #f3f3f3' }} />
 
-        {Object.values(eventData).length > 0 && (
+        {loading ? (
           <div>
-            <h3>Filter options:</h3>
-            <p>
-              <button onClick={() => this.setGenderFilter('female')}>
-                Girls
-              </button>
-              <button onClick={() => this.setGenderFilter('male')}>Boys</button>
-              <button onClick={() => this.setGenderFilter('both')}>Both</button>
-            </p>
-            <p>By age</p>
-            <p>Skipped events: {Object.values(skipped).length}</p>
-            <hr />
-            Tab to switch between results, filterable visit list, etc
-            <Results
-              events={events}
-              averages={averages}
-              distribution={distribution}
-              totals={totals}
-              timeline={timeline}
+            <div
+              style={{
+                marginTop: '10%',
+                textAlign: 'center',
+                fontSize: '2rem',
+                color: '#777777'
+              }}
+            >
+              Loading...
+            </div>
+            <LoadingMask
+              style={{
+                left: 'unset',
+                position: 'unset',
+                justifyContent: 'center',
+                textAlign: 'center'
+              }}
             />
-            List of trackedEntityInstances sortable by different indicator
-            severity
           </div>
+        ) : (
+          Object.values(eventData).length > 0 && (
+            <div>
+              <h3>Filter options:</h3>
+              <p>
+                <button onClick={() => this.setGenderFilter('female')}>
+                  Girls
+                </button>
+                <button onClick={() => this.setGenderFilter('male')}>
+                  Boys
+                </button>
+                <button onClick={() => this.setGenderFilter('both')}>
+                  Both
+                </button>
+              </p>
+              <p>By age</p>
+              <p>Skipped events: {Object.values(skipped).length}</p>
+              <hr />
+              Tab to switch between results, filterable visit list, etc
+              <Results
+                events={events}
+                averages={averages}
+                distribution={distribution}
+                totals={totals}
+                timeline={timeline}
+              />
+              List of trackedEntityInstances sortable by different indicator
+              severity
+            </div>
+          )
         )}
       </div>
     );
