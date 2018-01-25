@@ -39,10 +39,8 @@ class Result extends React.Component {
 
     const timelineData = Object.entries(timeline).map(val => [
       Number(val[0]),
-      val[1].reduce((acc, val) => acc + val, 0) / val[1].length
+      val[1].reduce((acc, v) => acc + v, 0) / val[1].length
     ]);
-
-    console.log(timelineData);
 
     const distributionConfig = {
       chart: {

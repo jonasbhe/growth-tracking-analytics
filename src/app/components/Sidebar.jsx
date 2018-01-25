@@ -3,7 +3,6 @@ import OrgUnitTree from 'd2-ui/lib/org-unit-tree/OrgUnitTree.component';
 
 class Sidebar extends React.Component {
   render() {
-    console.log(root);
     const { root, ouPath, onSelectClick } = this.props;
 
     if (!root) return null;
@@ -18,7 +17,7 @@ class Sidebar extends React.Component {
             backgroundColor: 'white',
             marginTop: 50,
             height: 600,
-            width: 350,
+            width: 250,
             overflow: 'auto'
           }}
         >
