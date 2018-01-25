@@ -12,6 +12,12 @@ import {
 } from '../../formulas/zFormulas';
 
 class Mainpage extends React.Component {
+  state = {
+    gender: 'both'
+  };
+
+  setGenderFilter = gender => this.setState({ gender });
+
   addVisitToTotals = (value, totals) => ({
     SD0_1:
       Math.abs(value) >= 0 && Math.abs(value) < 1
@@ -30,6 +36,7 @@ class Mainpage extends React.Component {
 
   mapEvents = trackedEntityInstances => {
     const { events, startDate, endDate } = this.props;
+    const { gender } = this.state;
 
     if (!trackedEntityInstances || !events) return {};
 
@@ -42,6 +49,10 @@ class Mainpage extends React.Component {
           acc.skipped[event.event] = event;
           return acc;
         }
+
+        // Filter results based on selected gender
+        if (patient.gender === 'Male' && gender === 'female') return acc;
+        if (patient.gender === 'Female' && gender === 'male') return acc;
 
         const eventDate = new Date(event.eventDate);
 
@@ -119,6 +130,11 @@ class Mainpage extends React.Component {
         const visitBfa = acc.events[event.event].bfa;
         const visitAcfa = acc.events[event.event].acfa;
 
+        // TODO: Change time based on time between selected dates.
+        // 12 months = 1 month accumulation
+        // 6 months = 1 month accumulation
+        // 3 months = 2 week accumulation
+        // 1 month = 1 week accumulation
         const day = Math.floor(
           (Date.parse(event.eventDate) - Date.parse(startDate)) / 2592000000
         );
@@ -365,7 +381,13 @@ class Mainpage extends React.Component {
         {Object.values(eventData).length > 0 && (
           <div>
             <h3>Filter options:</h3>
-            <p>Girls || Boys || All</p>
+            <p>
+              <button onClick={() => this.setGenderFilter('female')}>
+                Girls
+              </button>
+              <button onClick={() => this.setGenderFilter('male')}>Boys</button>
+              <button onClick={() => this.setGenderFilter('both')}>Both</button>
+            </p>
             <p>By age</p>
             <p>Skipped events: {Object.values(skipped).length}</p>
             <hr />
