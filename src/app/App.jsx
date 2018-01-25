@@ -26,6 +26,7 @@ class App extends React.Component {
       '/Hjw70Lodtf2/psfB4ksRKp2/DG8h5ijGxgO/sFGfRP4wPqe/oiAbfOiho08/hV87OCHgO4v'
     ],
     ouName: null,
+    ouLevel: null,
     root: null,
     startDate: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
     endDate: new Date()
@@ -101,6 +102,7 @@ class App extends React.Component {
       root,
       ouPath,
       ouName,
+      ouLevel,
       events,
       trackedEntityInstances,
       startDate,
@@ -137,6 +139,7 @@ class App extends React.Component {
             />
             <Mainpage
               ouName={ouName}
+              ouLevel={ouLevel}
               events={events}
               trackedEntityInstances={trackedEntityInstances}
               startDate={startDate}

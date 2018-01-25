@@ -290,6 +290,7 @@ class Mainpage extends React.Component {
   render() {
     const {
       ouName,
+      ouLevel,
       startDate,
       setStartDate,
       endDate,
@@ -309,8 +310,6 @@ class Mainpage extends React.Component {
       timeline
     } = eventData;
 
-    console.log(timeline);
-
     return (
       <div
         style={{
@@ -327,17 +326,9 @@ class Mainpage extends React.Component {
         >
           Growth Tracking Analytics App
         </div>
+
         <hr style={{ border: '1px solid #f3f3f3' }} />
-        <div
-          style={{
-            textAlign: 'center',
-            fontSize: '1.8rem',
-            margin: 10,
-            color: '#777777'
-          }}
-        >
-          {ouName || 'Choose an organization unit.'}
-        </div>
+
         <div
           style={{
             display: 'flex',
@@ -353,6 +344,20 @@ class Mainpage extends React.Component {
 
           <Datepicker label="End date:" date={endDate} setDate={setEndDate} />
         </div>
+
+        <div
+          style={{
+            textAlign: 'center',
+            fontSize: '1.8rem',
+            margin: 10,
+            color: '#777777'
+          }}
+        >
+          {!ouName
+            ? 'Choose an organization unit.'
+            : ouLevel < 4 ? 'Choose a lower level organisation unit.' : ouName}
+        </div>
+
         <div
           style={{
             textAlign: 'center',
@@ -364,20 +369,22 @@ class Mainpage extends React.Component {
               height: 42,
               background: 'unset',
               cursor: 'pointer',
-              backgroundColor: '#296596',
+              backgroundColor: !ouName || ouLevel < 4 ? '#9c9c9c' : '#296596',
               color: 'white',
               fontSize: '1.1rem',
               paddingLeft: '1rem',
               paddingRight: '1rem',
               outline: 'none'
             }}
-            // disabled={!ouName} // TODO: Disable button if no org unit is selecged
+            disabled={!ouName || ouLevel < 4}
             onClick={getEvents}
           >
             Get events
           </button>
         </div>
+
         <hr style={{ border: '1px solid #f3f3f3' }} />
+
         {Object.values(eventData).length > 0 && (
           <div>
             <h3>Filter options:</h3>
