@@ -1,10 +1,9 @@
 import React from 'react';
-import ReactHighcharts from 'react-highcharts';
-import HighchartsExporting from 'highcharts-exporting';
 
 import getColor from '../../formulas/getColor';
+import TimelineChart from './TimelineChart.jsx';
+import DistributionChart from './DistributionChart.jsx';
 
-HighchartsExporting(ReactHighcharts.Highcharts);
 
 class Result extends React.Component {
   state = {
@@ -29,242 +28,6 @@ class Result extends React.Component {
       timeline
     } = this.props;
     const { showDistribution, showTimeline } = this.state;
-
-    const distributionData = Object.entries(distribution)
-      .sort((a, b) => a[0] - b[0])
-      .map(d => [Number(d[0]), d[1]]);
-
-    const distributionMin =
-      Math.abs(distributionData[0][0]) >
-      distributionData[distributionData.length - 1][0]
-        ? distributionData[0][0]
-        : distributionData[distributionData.length - 1][0] * -1;
-
-    const timelineData = Object.entries(timeline).map(val => [
-      Number(val[0]),
-      val[1].reduce((acc, v) => acc + v, 0) / val[1].length
-    ]);
-
-    const timelineMin = timelineData.reduce(
-      (minVal, val) => Math.min(minVal, val[1]),
-      0
-    );
-    const timelineMax = timelineData.reduce(
-      (maxVal, val) => Math.max(maxVal, val[1]),
-      0
-    );
-    const timelineLimit =
-      Math.abs(timelineMin) > Math.abs(timelineMax) ? timelineMin : timelineMax;
-
-    // TODO: Move Timeline and Distribution into seperate classes
-
-    const distributionConfig = {
-      chart: {
-        type: 'column'
-      },
-      title: {
-        text: `${label} z-score distribution`
-      },
-      xAxis: {
-        crosshair: true,
-        min: distributionMin,
-        max: Math.abs(distributionMin),
-        title: {
-          text: 'Z-score'
-        }
-      },
-      yAxis: {
-        title: {
-          text: 'Number of occurences'
-        }
-      },
-      tooltip: false,
-      credits: false,
-      legend: {
-        enabled: false
-      },
-      series: [
-        {
-          data: distributionData,
-          zoneAxis: 'x',
-          zones: [
-            {
-              value: -2.9,
-              color: '#777777'
-            },
-            {
-              value: -1.9,
-              color: '#ff7070'
-            },
-            {
-              value: -0.9,
-              color: '#dede32'
-            },
-            {
-              value: 1,
-              color: '#BADA55'
-            },
-            {
-              value: 2,
-              color: '#dede32'
-            },
-            {
-              value: 3,
-              color: '#ff7070'
-            },
-            {
-              value: 1000,
-              color: '#777777'
-            }
-          ],
-
-          pointPadding: 0,
-          groupPadding: 0
-        }
-      ],
-      exporting: {
-        enabled: true
-      }
-    };
-
-    const timelineConfig = {
-      chart: {
-        type: 'spline'
-      },
-      title: {
-        text: `${label} z-score timeline`
-      },
-      xAxis: {
-        crosshair: true,
-        title: {
-          text: 'Month'
-        }
-      },
-      yAxis: {
-        crosshair: true,
-        title: {
-          text: 'Z-score'
-        },
-        min: Math.floor(Math.abs(timelineLimit) * -1),
-        max: Math.ceil(Math.abs(timelineLimit)),
-        plotLines: [
-          {
-            value: 3,
-            color: '#777777',
-            dashStyle: 'solid',
-            width: 2,
-            label: {
-              text: '3 SD'
-            }
-          },
-          {
-            value: 2,
-            color: '#ff7070',
-            dashStyle: 'solid',
-            width: 2,
-            label: {
-              text: '2 SD'
-            }
-          },
-          {
-            value: 1,
-            color: '#dede32',
-            dashStyle: 'solid',
-            width: 2,
-            label: {
-              text: '1 SD'
-            }
-          },
-          {
-            value: 0,
-            color: '#BADA55',
-            dashStyle: 'solid',
-            width: 2,
-            label: {
-              text: '0 SD'
-            }
-          },
-          {
-            value: -1,
-            color: '#dede32',
-            dashStyle: 'solid',
-            width: 2,
-            label: {
-              text: '-1 SD'
-            }
-          },
-          {
-            value: -2,
-            color: '#ff7070',
-            dashStyle: 'solid',
-            width: 2,
-            label: {
-              text: '-2 SD'
-            }
-          },
-          {
-            value: -3,
-            color: '#777777',
-            dashStyle: 'solid',
-            width: 2,
-            label: {
-              text: '-3 SD'
-            }
-          }
-        ]
-      },
-      tooltip: false,
-      credits: false,
-      legend: {
-        enabled: false
-      },
-      series: [
-        {
-          data: timelineData,
-          lineWidth: 5,
-          marker: {
-            enabled: false
-          },
-          zoneAxis: 'y',
-          zones: [
-            {
-              value: -3,
-              color: '#777777'
-            },
-            {
-              value: -2,
-              color: '#ff7070'
-            },
-            {
-              value: -1,
-              color: '#dede32'
-            },
-            {
-              value: 1,
-              color: '#BADA55'
-            },
-            {
-              value: 2,
-              color: '#dede32'
-            },
-            {
-              value: 3,
-              color: '#ff7070'
-            },
-            {
-              value: 1000,
-              color: '#777777'
-            }
-          ],
-
-          pointPadding: 0,
-          groupPadding: 0
-        }
-      ],
-      exporting: {
-        enabled: true
-      }
-    };
 
     return (
       <div>
@@ -402,8 +165,10 @@ class Result extends React.Component {
             borderBottom: '1px solid #777777'
           }}
         >
-          {showDistribution && <ReactHighcharts config={distributionConfig} />}
-          {showTimeline && <ReactHighcharts config={timelineConfig} />}
+          {showDistribution && (
+            <DistributionChart label={label} distribution={distribution} />
+          )}
+          {showTimeline && <TimelineChart label={label} timeline={timeline} />}
         </div>
       </div>
     );
