@@ -29,6 +29,13 @@ class Mainpage extends React.Component {
     SD3: value >= 3 ? totals.SD3 + 1 : totals.SD3
   });
 
+  skipEvent = (event, sortOrder, msg) => ({
+    id: event.event,
+    event,
+    sortOrder,
+    reason: msg
+  });
+
   mapEvents = trackedEntityInstances => {
     const { events, startDate, endDate } = this.props;
     const { gender } = this.state;
@@ -41,7 +48,11 @@ class Mainpage extends React.Component {
 
         // If patient does not exist, filter it.
         if (!patient) {
-          acc.skipped[event.event] = event;
+          acc.skipped[event.event] = this.skipEvent(
+            event,
+            0,
+            'Patient data is missing'
+          );
           return acc;
         }
 
@@ -72,7 +83,11 @@ class Mainpage extends React.Component {
 
         // If the event is missing muac, weight, or height, filter it.
         if (!muac || !height || !weight) {
-          acc.skipped[event.event] = event;
+          acc.skipped[event.event] = this.skipEvent(
+            event,
+            1,
+            'The event is missing muac, height, or weight.'
+          );
           return acc;
         }
 
@@ -86,7 +101,11 @@ class Mainpage extends React.Component {
 
         // If the event does not have valid WFL, WFA or LHFA data, filter it.
         if (!rawWfl || !rawWfa || !rawLhfa) {
-          acc.skipped[event.event] = event;
+          acc.skipped[event.event] = this.skipEvent(
+            event,
+            2,
+            'The event does not have valid data to calculate WFL, WFA, or LHFA with.'
+          );
           return acc;
         }
 
@@ -99,7 +118,11 @@ class Mainpage extends React.Component {
           Math.abs(rawBfa) > 5 ||
           Math.abs(rawAcfa) > 5
         ) {
-          acc.skipped[event.event] = event;
+          acc.skipped[event.event] = this.skipEvent(
+            event,
+            3,
+            'The event has an indicator outside of the given SD max range (5)'
+          ); // TODO: replace 5 with variable
           return acc;
         }
 
@@ -427,7 +450,6 @@ class Mainpage extends React.Component {
           <div>
             <div
               style={{
-                marginTop: '10%',
                 textAlign: 'center',
                 fontSize: '2rem',
                 color: '#777777'
@@ -460,18 +482,16 @@ class Mainpage extends React.Component {
                 </button>
               </p>
               <p>By age</p>
-              <p>Skipped events: {Object.values(skipped).length}</p>
+              <p>Max SD allowed (5)</p>
               <hr />
-              Tab to switch between results, filterable visit list, etc
               <Results
                 events={events}
                 averages={averages}
                 distribution={distribution}
                 totals={totals}
                 timeline={timeline}
+                skipped={skipped}
               />
-              List of trackedEntityInstances sortable by different indicator
-              severity
             </div>
           )
         )}
