@@ -1,5 +1,8 @@
 import React from 'react';
 import ReactHighcharts from 'react-highcharts';
+import HighchartsExporting from 'highcharts-exporting';
+
+HighchartsExporting(ReactHighcharts.Highcharts);
 
 import getColor from '../../formulas/getColor';
 
@@ -47,7 +50,7 @@ class Result extends React.Component {
         type: 'column'
       },
       title: {
-        text: 'Z-score Distribution'
+        text: `${label} z-score distribution`
       },
       xAxis: {
         crosshair: true,
@@ -105,7 +108,10 @@ class Result extends React.Component {
           pointPadding: 0,
           groupPadding: 0
         }
-      ]
+      ],
+      exporting: {
+        enabled: true
+      }
     };
 
     const timelineConfig = {
@@ -113,7 +119,7 @@ class Result extends React.Component {
         type: 'spline'
       },
       title: {
-        text: 'Z-score Timeline'
+        text: `${label} z-score timeline`
       },
       xAxis: {
         crosshair: true,
@@ -125,7 +131,72 @@ class Result extends React.Component {
         crosshair: true,
         title: {
           text: 'Z-score'
-        }
+        },
+        plotLines: [
+          {
+            value: 3,
+            color: '#777777',
+            dashStyle: 'solid',
+            width: 3,
+            label: {
+              text: '3 SD'
+            }
+          },
+          {
+            value: 2,
+            color: '#ff7070',
+            dashStyle: 'solid',
+            width: 3,
+            label: {
+              text: '2 SD'
+            }
+          },
+          {
+            value: 1,
+            color: '#dede32',
+            dashStyle: 'solid',
+            width: 3,
+            label: {
+              text: '1 SD'
+            }
+          },
+          {
+            value: 0,
+            color: '#BADA55',
+            dashStyle: 'solid',
+            width: 3,
+            label: {
+              text: '0 SD'
+            }
+          },
+          {
+            value: -1,
+            color: '#dede32',
+            dashStyle: 'solid',
+            width: 3,
+            label: {
+              text: '-1 SD'
+            }
+          },
+          {
+            value: -2,
+            color: '#ff7070',
+            dashStyle: 'solid',
+            width: 3,
+            label: {
+              text: '-2 SD'
+            }
+          },
+          {
+            value: -3,
+            color: '#777777',
+            dashStyle: 'solid',
+            width: 3,
+            label: {
+              text: '-3 SD'
+            }
+          }
+        ]
       },
       tooltip: false,
       credits: false,
@@ -174,7 +245,10 @@ class Result extends React.Component {
           pointPadding: 0,
           groupPadding: 0
         }
-      ]
+      ],
+      exporting: {
+        enabled: true
+      }
     };
 
     return (
