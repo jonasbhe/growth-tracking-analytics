@@ -66,7 +66,6 @@ class Results extends React.Component {
               fontSize: '0.7rem',
               paddingLeft: '0.5rem',
               paddingRight: '0.5rem',
-              outline: 'none',
               border: 'none'
             }}
             onClick={this.toggleShowSkipped}

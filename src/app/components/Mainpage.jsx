@@ -3,6 +3,7 @@ import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
 
 import Datepicker from './Datepicker.jsx';
 import Results from './Results.jsx';
+import Filter from './Filter.jsx';
 
 import {
   getWeightForLength,
@@ -15,12 +16,12 @@ import {
 class Mainpage extends React.Component {
   state = {
     gender: 'both',
-    filterSd: 5
+    filterSd: 5,
+    minAge: 0,
+    maxAge: 24
   };
 
-  setGenderFilter = gender => this.setState({ gender });
-
-  setFilterSd = filterSd => this.setState({ filterSd });
+  updateFilter = filter => this.setState({ ...filter });
 
   addVisitToTotals = (value, totals) => ({
     SD3neg: value <= -3 ? totals.SD3neg + 1 : totals.SD3neg,
@@ -41,9 +42,14 @@ class Mainpage extends React.Component {
 
   mapEvents = trackedEntityInstances => {
     const { events, startDate, endDate } = this.props;
-    const { gender, filterSd } = this.state;
+    const { gender, filterSd, minAge, maxAge } = this.state;
 
-    if (!trackedEntityInstances || !events) return {};
+    if (
+      !trackedEntityInstances ||
+      !events ||
+      Object.values(events).length === 0
+    )
+      return {};
 
     return events.sort((a, b) => a.eventDate > b.eventDate).reduce(
       (acc, event, index) => {
@@ -70,6 +76,18 @@ class Mainpage extends React.Component {
           (Date.parse(eventDate) - Date.parse(patient.birthdate)) / 86400000
         );
 
+        // If patient is older than the given filter ages, filter it.
+        if (ageInDays / 30.25 < minAge || ageInDays / 30.25 > maxAge) {
+          acc.skipped[event.event] = this.skipEvent(
+            event,
+            1,
+            `Patient data is outside of specified age range. (${Math.round(
+              ageInDays / 30.25 * 100
+            ) / 100} months)`
+          );
+          return acc;
+        }
+
         const muacRaw = event.dataValues.find(
           val => val.dataElement === 'ySphlmZ7fKG'
         );
@@ -88,7 +106,7 @@ class Mainpage extends React.Component {
         if (!muac || !height || !weight) {
           acc.skipped[event.event] = this.skipEvent(
             event,
-            1,
+            2,
             'The event is missing muac, height, or weight.'
           );
           return acc;
@@ -106,7 +124,7 @@ class Mainpage extends React.Component {
         if (!rawWfl || !rawWfa || !rawLhfa) {
           acc.skipped[event.event] = this.skipEvent(
             event,
-            2,
+            3,
             'The event does not have valid data to calculate WFL, WFA, or LHFA with.'
           );
           return acc;
@@ -123,7 +141,7 @@ class Mainpage extends React.Component {
           ) {
             acc.skipped[event.event] = this.skipEvent(
               event,
-              3,
+              4,
               `The event has an indicator outside of the given SD max range (${filterSd})`
             );
             return acc;
@@ -360,7 +378,6 @@ class Mainpage extends React.Component {
       getEvents,
       loading
     } = this.props;
-    const { filterSd, gender } = this.state;
 
     const trackedEntityInstances = this.mapTrackedEntityInstances();
     const eventData = this.mapEvents(trackedEntityInstances);
@@ -440,7 +457,6 @@ class Mainpage extends React.Component {
               fontSize: '1.1rem',
               paddingLeft: '1rem',
               paddingRight: '1rem',
-              outline: 'none',
               border: 'none'
             }}
             disabled={!ouName || ouLevel < 4 || loading}
@@ -452,7 +468,7 @@ class Mainpage extends React.Component {
 
         <hr style={{ border: '1px solid #f3f3f3' }} />
 
-        {loading ? (
+        {loading && (
           <div>
             <div
               style={{
@@ -472,120 +488,12 @@ class Mainpage extends React.Component {
               }}
             />
           </div>
-        ) : (
+        )}
+
+        {!loading &&
           Object.values(eventData).length > 0 && (
             <div>
-              <div
-                style={{
-                  fontSize: '1.8rem',
-                  color: '#777777',
-                  margin: 10
-                }}
-              >
-                Filter options
-              </div>
-              <div>
-                <div style={{ margin: 10 }}>
-                  <div
-                    style={{
-                      fontSize: '1.2rem',
-                      color: '#777777'
-                    }}
-                  >
-                    By gender
-                  </div>
-                  <button
-                    style={{
-                      height: 42,
-                      background: 'unset',
-                      cursor: 'pointer',
-                      backgroundColor:
-                        gender === 'female' ? '#296596' : '#9c9c9c',
-                      color: 'white',
-                      fontSize: '1.1rem',
-                      paddingLeft: '1rem',
-                      paddingRight: '1rem',
-                      outline: 'none',
-                      border: 'none',
-                      margin: 5
-                    }}
-                    onClick={() => this.setGenderFilter('female')}
-                  >
-                    Girls
-                  </button>
-                  <button
-                    style={{
-                      height: 42,
-                      background: 'unset',
-                      cursor: 'pointer',
-                      backgroundColor:
-                        gender === 'male' ? '#296596' : '#9c9c9c',
-                      color: 'white',
-                      fontSize: '1.1rem',
-                      paddingLeft: '1rem',
-                      paddingRight: '1rem',
-                      outline: 'none',
-                      border: 'none',
-                      margin: 5
-                    }}
-                    onClick={() => this.setGenderFilter('male')}
-                  >
-                    Boys
-                  </button>
-                  <button
-                    style={{
-                      height: 42,
-                      background: 'unset',
-                      cursor: 'pointer',
-                      backgroundColor:
-                        gender === 'both' ? '#296596' : '#9c9c9c',
-                      color: 'white',
-                      fontSize: '1.1rem',
-                      paddingLeft: '1rem',
-                      paddingRight: '1rem',
-                      outline: 'none',
-                      border: 'none',
-                      margin: 5
-                    }}
-                    onClick={() => this.setGenderFilter('both')}
-                  >
-                    Both
-                  </button>
-                </div>
-
-                <div style={{ margin: 10 }}>
-                  <div
-                    style={{
-                      fontSize: '1.2rem',
-                      color: '#777777'
-                    }}
-                  >
-                    By age
-                  </div>
-                  age selector
-                </div>
-
-                <div style={{ margin: 10 }}>
-                  <div
-                    style={{
-                      fontSize: '1.2rem',
-                      color: '#777777'
-                    }}
-                  >
-                    Filter events with zscores above +/-
-                  </div>
-                  <input
-                    style={{
-                      height: 25,
-                      fontSize: '1.5rem',
-                      width: '10%'
-                    }}
-                    type="number"
-                    value={filterSd}
-                    onChange={event => this.setFilterSd(event.target.value)}
-                  />
-                </div>
-              </div>
+              <Filter updateFilter={this.updateFilter} />
               <hr />
               <Results
                 events={events}
@@ -596,8 +504,10 @@ class Mainpage extends React.Component {
                 skipped={skipped}
               />
             </div>
-          )
-        )}
+          )}
+
+        {!loading &&
+          Object.values(eventData).length === 0 && <div>No events found.</div>}
       </div>
     );
   }
