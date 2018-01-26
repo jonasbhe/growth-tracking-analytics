@@ -228,10 +228,13 @@ class Result extends React.Component {
                 }}
               >
                 <div>SD-range</div>
-                <div>SD0-1</div>
-                <div>SD1-2</div>
-                <div>SD2-3</div>
-                <div>SD3+</div>
+                <div>-3 SD</div>
+                <div>-2 SD</div>
+                <div>-1 SD</div>
+                <div>0 SD</div>
+                <div>+1 SD</div>
+                <div>+2 SD</div>
+                <div>+3 SD</div>
               </div>
               <div
                 style={{
@@ -242,9 +245,12 @@ class Result extends React.Component {
                 }}
               >
                 <div>Total</div>
-                <div>{totals.SD0_1}</div>
-                <div>{totals.SD1_2}</div>
-                <div>{totals.SD2_3}</div>
+                <div>{totals.SD3neg}</div>
+                <div>{totals.SD2neg}</div>
+                <div>{totals.SD1neg}</div>
+                <div>{totals.SD0}</div>
+                <div>{totals.SD1}</div>
+                <div>{totals.SD2}</div>
                 <div>{totals.SD3}</div>
               </div>
               <div
@@ -256,9 +262,12 @@ class Result extends React.Component {
                 }}
               >
                 <div>Percentage</div>
-                <div>{Math.round(totals.SD0_1 / max * 1000) / 10}%</div>
-                <div>{Math.round(totals.SD1_2 / max * 1000) / 10}%</div>
-                <div>{Math.round(totals.SD2_3 / max * 1000) / 10}%</div>
+                <div>{Math.round(totals.SD3neg / max * 1000) / 10}%</div>
+                <div>{Math.round(totals.SD2neg / max * 1000) / 10}%</div>
+                <div>{Math.round(totals.SD1neg / max * 1000) / 10}%</div>
+                <div>{Math.round(totals.SD0 / max * 1000) / 10}%</div>
+                <div>{Math.round(totals.SD1 / max * 1000) / 10}%</div>
+                <div>{Math.round(totals.SD2 / max * 1000) / 10}%</div>
                 <div>{Math.round(totals.SD3 / max * 1000) / 10}%</div>
               </div>
             </div>

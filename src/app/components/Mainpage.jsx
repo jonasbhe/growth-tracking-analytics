@@ -20,19 +20,13 @@ class Mainpage extends React.Component {
   setGenderFilter = gender => this.setState({ gender });
 
   addVisitToTotals = (value, totals) => ({
-    SD0_1:
-      Math.abs(value) >= 0 && Math.abs(value) < 1
-        ? totals.SD0_1 + 1
-        : totals.SD0_1,
-    SD1_2:
-      Math.abs(value) >= 1 && Math.abs(value) < 2
-        ? totals.SD1_2 + 1
-        : totals.SD1_2,
-    SD2_3:
-      Math.abs(value) >= 2 && Math.abs(value) < 3
-        ? totals.SD2_3 + 1
-        : totals.SD2_3,
-    SD3: Math.abs(value) >= 3 ? totals.SD3 + 1 : totals.SD3
+    SD3neg: value <= -3 ? totals.SD3neg + 1 : totals.SD3neg,
+    SD2neg: value > -3 && value <= -2 ? totals.SD2neg + 1 : totals.SD2neg,
+    SD1neg: value > -2 && value <= -1 ? totals.SD1neg + 1 : totals.SD1neg,
+    SD0: value > -1 && value < 1 ? totals.SD0 + 1 : totals.SD0,
+    SD1: value >= 1 && value < 2 ? totals.SD1 + 1 : totals.SD1,
+    SD2: value >= 2 && value < 3 ? totals.SD2 + 1 : totals.SD2,
+    SD3: value >= 3 ? totals.SD3 + 1 : totals.SD3
   });
 
   mapEvents = trackedEntityInstances => {
@@ -238,11 +232,51 @@ class Mainpage extends React.Component {
           acfa: 0
         },
         totals: {
-          wfl: { SD0_1: 0, SD1_2: 0, SD2_3: 0, SD3: 0 },
-          wfa: { SD0_1: 0, SD1_2: 0, SD2_3: 0, SD3: 0 },
-          lhfa: { SD0_1: 0, SD1_2: 0, SD2_3: 0, SD3: 0 },
-          bfa: { SD0_1: 0, SD1_2: 0, SD2_3: 0, SD3: 0 },
-          acfa: { SD0_1: 0, SD1_2: 0, SD2_3: 0, SD3: 0 }
+          wfl: {
+            SD3neg: 0,
+            SD2neg: 0,
+            SD1neg: 0,
+            SD0: 0,
+            SD1: 0,
+            SD2: 0,
+            SD3: 0
+          },
+          wfa: {
+            SD3neg: 0,
+            SD2neg: 0,
+            SD1neg: 0,
+            SD0: 0,
+            SD1: 0,
+            SD2: 0,
+            SD3: 0
+          },
+          lhfa: {
+            SD3neg: 0,
+            SD2neg: 0,
+            SD1neg: 0,
+            SD0: 0,
+            SD1: 0,
+            SD2: 0,
+            SD3: 0
+          },
+          bfa: {
+            SD3neg: 0,
+            SD2neg: 0,
+            SD1neg: 0,
+            SD0: 0,
+            SD1: 0,
+            SD2: 0,
+            SD3: 0
+          },
+          acfa: {
+            SD3neg: 0,
+            SD2neg: 0,
+            SD1neg: 0,
+            SD0: 0,
+            SD1: 0,
+            SD2: 0,
+            SD3: 0
+          }
         },
         distribution: {
           wfl: {},

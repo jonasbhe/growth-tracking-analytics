@@ -9,7 +9,8 @@ class Sidebar extends React.Component {
     return (
       <div
         style={{
-          backgroundColor: '#f3f3f3'
+          backgroundColor: '#f3f3f3',
+          borderRight: '1px solid #e1e1e1'
         }}
       >
         <div
