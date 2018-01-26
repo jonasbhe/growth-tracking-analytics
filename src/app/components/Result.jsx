@@ -283,7 +283,8 @@ class Result extends React.Component {
               fontSize: '1.1rem',
               paddingLeft: '1rem',
               paddingRight: '1rem',
-              outline: 'none'
+              outline: 'none',
+              border: 'none'
             }}
             onClick={this.toggleDistribution}
           >
@@ -300,7 +301,8 @@ class Result extends React.Component {
               fontSize: '1.1rem',
               paddingLeft: '1rem',
               paddingRight: '1rem',
-              outline: 'none'
+              outline: 'none',
+              border: 'none'
             }}
             onClick={this.toggleTimeline}
           >

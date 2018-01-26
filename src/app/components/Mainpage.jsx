@@ -14,10 +14,13 @@ import {
 
 class Mainpage extends React.Component {
   state = {
-    gender: 'both'
+    gender: 'both',
+    filterSd: 5
   };
 
   setGenderFilter = gender => this.setState({ gender });
+
+  setFilterSd = filterSd => this.setState({ filterSd });
 
   addVisitToTotals = (value, totals) => ({
     SD3neg: value <= -3 ? totals.SD3neg + 1 : totals.SD3neg,
@@ -38,7 +41,7 @@ class Mainpage extends React.Component {
 
   mapEvents = trackedEntityInstances => {
     const { events, startDate, endDate } = this.props;
-    const { gender } = this.state;
+    const { gender, filterSd } = this.state;
 
     if (!trackedEntityInstances || !events) return {};
 
@@ -109,21 +112,22 @@ class Mainpage extends React.Component {
           return acc;
         }
 
-        // If the event has values that exceed 5 SD, it might be bad data, filter it.
-        // TODO: Allow the user to filter this themselves. For example a text box that filters anyone above x number
-        if (
-          Math.abs(rawWfl) > 5 ||
-          Math.abs(rawWfa) > 5 ||
-          Math.abs(rawLhfa) > 5 ||
-          Math.abs(rawBfa) > 5 ||
-          Math.abs(rawAcfa) > 5
-        ) {
-          acc.skipped[event.event] = this.skipEvent(
-            event,
-            3,
-            'The event has an indicator outside of the given SD max range (5)'
-          ); // TODO: replace 5 with variable
-          return acc;
+        // If the event has values that exceed X SD, it might be bad data, filter it.
+        if (filterSd && filterSd !== '') {
+          if (
+            Math.abs(rawWfl) > filterSd ||
+            Math.abs(rawWfa) > filterSd ||
+            Math.abs(rawLhfa) > filterSd ||
+            Math.abs(rawBfa) > filterSd ||
+            Math.abs(rawAcfa) > filterSd
+          ) {
+            acc.skipped[event.event] = this.skipEvent(
+              event,
+              3,
+              `The event has an indicator outside of the given SD max range (${filterSd})`
+            );
+            return acc;
+          }
         }
 
         acc.events[event.event] = {
@@ -356,6 +360,7 @@ class Mainpage extends React.Component {
       getEvents,
       loading
     } = this.props;
+    const { filterSd, gender } = this.state;
 
     const trackedEntityInstances = this.mapTrackedEntityInstances();
     const eventData = this.mapEvents(trackedEntityInstances);
@@ -435,7 +440,8 @@ class Mainpage extends React.Component {
               fontSize: '1.1rem',
               paddingLeft: '1rem',
               paddingRight: '1rem',
-              outline: 'none'
+              outline: 'none',
+              border: 'none'
             }}
             disabled={!ouName || ouLevel < 4 || loading}
             onClick={getEvents}
@@ -469,20 +475,117 @@ class Mainpage extends React.Component {
         ) : (
           Object.values(eventData).length > 0 && (
             <div>
-              <h3>Filter options:</h3>
-              <p>
-                <button onClick={() => this.setGenderFilter('female')}>
-                  Girls
-                </button>
-                <button onClick={() => this.setGenderFilter('male')}>
-                  Boys
-                </button>
-                <button onClick={() => this.setGenderFilter('both')}>
-                  Both
-                </button>
-              </p>
-              <p>By age</p>
-              <p>Max SD allowed (5)</p>
+              <div
+                style={{
+                  fontSize: '1.8rem',
+                  color: '#777777',
+                  margin: 10
+                }}
+              >
+                Filter options
+              </div>
+              <div>
+                <div style={{ margin: 10 }}>
+                  <div
+                    style={{
+                      fontSize: '1.2rem',
+                      color: '#777777'
+                    }}
+                  >
+                    By gender
+                  </div>
+                  <button
+                    style={{
+                      height: 42,
+                      background: 'unset',
+                      cursor: 'pointer',
+                      backgroundColor:
+                        gender === 'female' ? '#296596' : '#9c9c9c',
+                      color: 'white',
+                      fontSize: '1.1rem',
+                      paddingLeft: '1rem',
+                      paddingRight: '1rem',
+                      outline: 'none',
+                      border: 'none',
+                      margin: 5
+                    }}
+                    onClick={() => this.setGenderFilter('female')}
+                  >
+                    Girls
+                  </button>
+                  <button
+                    style={{
+                      height: 42,
+                      background: 'unset',
+                      cursor: 'pointer',
+                      backgroundColor:
+                        gender === 'male' ? '#296596' : '#9c9c9c',
+                      color: 'white',
+                      fontSize: '1.1rem',
+                      paddingLeft: '1rem',
+                      paddingRight: '1rem',
+                      outline: 'none',
+                      border: 'none',
+                      margin: 5
+                    }}
+                    onClick={() => this.setGenderFilter('male')}
+                  >
+                    Boys
+                  </button>
+                  <button
+                    style={{
+                      height: 42,
+                      background: 'unset',
+                      cursor: 'pointer',
+                      backgroundColor:
+                        gender === 'both' ? '#296596' : '#9c9c9c',
+                      color: 'white',
+                      fontSize: '1.1rem',
+                      paddingLeft: '1rem',
+                      paddingRight: '1rem',
+                      outline: 'none',
+                      border: 'none',
+                      margin: 5
+                    }}
+                    onClick={() => this.setGenderFilter('both')}
+                  >
+                    Both
+                  </button>
+                </div>
+
+                <div style={{ margin: 10 }}>
+                  <div
+                    style={{
+                      fontSize: '1.2rem',
+                      color: '#777777'
+                    }}
+                  >
+                    By age
+                  </div>
+                  age selector
+                </div>
+
+                <div style={{ margin: 10 }}>
+                  <div
+                    style={{
+                      fontSize: '1.2rem',
+                      color: '#777777'
+                    }}
+                  >
+                    Filter events with zscores above +/-
+                  </div>
+                  <input
+                    style={{
+                      height: 25,
+                      fontSize: '1.5rem',
+                      width: '10%'
+                    }}
+                    type="number"
+                    value={filterSd}
+                    onChange={event => this.setFilterSd(event.target.value)}
+                  />
+                </div>
+              </div>
               <hr />
               <Results
                 events={events}
