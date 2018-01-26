@@ -349,7 +349,8 @@ class Mainpage extends React.Component {
     return (
       <div
         style={{
-          width: '100%'
+          width: '100%',
+          overflow: 'auto'
         }}
       >
         <div
