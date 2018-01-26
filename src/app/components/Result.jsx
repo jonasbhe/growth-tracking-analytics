@@ -2,9 +2,9 @@ import React from 'react';
 import ReactHighcharts from 'react-highcharts';
 import HighchartsExporting from 'highcharts-exporting';
 
-HighchartsExporting(ReactHighcharts.Highcharts);
-
 import getColor from '../../formulas/getColor';
+
+HighchartsExporting(ReactHighcharts.Highcharts);
 
 class Result extends React.Component {
   state = {
@@ -44,6 +44,19 @@ class Result extends React.Component {
       Number(val[0]),
       val[1].reduce((acc, v) => acc + v, 0) / val[1].length
     ]);
+
+    const timelineMin = timelineData.reduce(
+      (minVal, val) => Math.min(minVal, val[1]),
+      0
+    );
+    const timelineMax = timelineData.reduce(
+      (maxVal, val) => Math.max(maxVal, val[1]),
+      0
+    );
+    const timelineLimit =
+      Math.abs(timelineMin) > Math.abs(timelineMax) ? timelineMin : timelineMax;
+
+    // TODO: Move Timeline and Distribution into seperate classes
 
     const distributionConfig = {
       chart: {
@@ -132,12 +145,14 @@ class Result extends React.Component {
         title: {
           text: 'Z-score'
         },
+        min: Math.floor(Math.abs(timelineLimit) * -1),
+        max: Math.ceil(Math.abs(timelineLimit)),
         plotLines: [
           {
             value: 3,
             color: '#777777',
             dashStyle: 'solid',
-            width: 3,
+            width: 2,
             label: {
               text: '3 SD'
             }
@@ -146,7 +161,7 @@ class Result extends React.Component {
             value: 2,
             color: '#ff7070',
             dashStyle: 'solid',
-            width: 3,
+            width: 2,
             label: {
               text: '2 SD'
             }
@@ -155,7 +170,7 @@ class Result extends React.Component {
             value: 1,
             color: '#dede32',
             dashStyle: 'solid',
-            width: 3,
+            width: 2,
             label: {
               text: '1 SD'
             }
@@ -164,7 +179,7 @@ class Result extends React.Component {
             value: 0,
             color: '#BADA55',
             dashStyle: 'solid',
-            width: 3,
+            width: 2,
             label: {
               text: '0 SD'
             }
@@ -173,7 +188,7 @@ class Result extends React.Component {
             value: -1,
             color: '#dede32',
             dashStyle: 'solid',
-            width: 3,
+            width: 2,
             label: {
               text: '-1 SD'
             }
@@ -182,7 +197,7 @@ class Result extends React.Component {
             value: -2,
             color: '#ff7070',
             dashStyle: 'solid',
-            width: 3,
+            width: 2,
             label: {
               text: '-2 SD'
             }
@@ -191,7 +206,7 @@ class Result extends React.Component {
             value: -3,
             color: '#777777',
             dashStyle: 'solid',
-            width: 3,
+            width: 2,
             label: {
               text: '-3 SD'
             }
