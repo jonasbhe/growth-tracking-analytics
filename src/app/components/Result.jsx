@@ -64,6 +64,8 @@ class Result extends React.Component {
             display: 'flex',
             textAlign: 'center',
             marginBottom: 10,
+            marginLeft: 30,
+            marginRight: 30,
             flexWrap: 'wrap'
           }}
         >
@@ -101,6 +103,55 @@ class Result extends React.Component {
                 >
                   {zscore}
                 </div>
+              </div>
+            </div>
+            <div
+              style={{
+                flex: 'auto',
+                display: 'flex',
+                justifyContent: 'center',
+                marginTop: 10
+              }}
+            >
+              <div style={{ textAlign: 'center' }}>
+                <button
+                  style={{
+                    height: 42,
+                    background: 'unset',
+                    cursor: 'pointer',
+                    backgroundColor: '#296596',
+                    color: 'white',
+                    fontSize: '1.1rem',
+                    paddingLeft: '1rem',
+                    paddingRight: '1rem',
+                    border: 'none',
+                    width: 110,
+                    margin: 5
+                  }}
+                  onClick={this.toggleDistribution}
+                >
+                  {showDistribution ? 'Hide distribution' : 'Show distribution'}
+                </button>
+              </div>
+              <div>
+                <button
+                  style={{
+                    height: 42,
+                    background: 'unset',
+                    cursor: 'pointer',
+                    backgroundColor: '#296596',
+                    color: 'white',
+                    fontSize: '1.1rem',
+                    paddingLeft: '1rem',
+                    paddingRight: '1rem',
+                    border: 'none',
+                    width: 110,
+                    margin: 5
+                  }}
+                  onClick={this.toggleTimeline}
+                >
+                  {showTimeline ? 'Hide timeline' : 'Show timeline'}
+                </button>
               </div>
             </div>
           </div>
@@ -199,55 +250,6 @@ class Result extends React.Component {
               toggleVisits={this.toggleVisits}
             />
           </div>
-          <div
-            style={{
-              flex: 'auto',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center'
-            }}
-          >
-            <div style={{ textAlign: 'center' }}>
-              <button
-                style={{
-                  height: 42,
-                  background: 'unset',
-                  cursor: 'pointer',
-                  backgroundColor: '#296596',
-                  color: 'white',
-                  fontSize: '1.1rem',
-                  paddingLeft: '1rem',
-                  paddingRight: '1rem',
-                  border: 'none',
-                  width: 125,
-                  margin: 5
-                }}
-                onClick={this.toggleDistribution}
-              >
-                {showDistribution ? 'Hide distribution' : 'Show distribution'}
-              </button>
-            </div>
-            <div>
-              <button
-                style={{
-                  height: 42,
-                  background: 'unset',
-                  cursor: 'pointer',
-                  backgroundColor: '#296596',
-                  color: 'white',
-                  fontSize: '1.1rem',
-                  paddingLeft: '1rem',
-                  paddingRight: '1rem',
-                  border: 'none',
-                  width: 125,
-                  margin: 5
-                }}
-                onClick={this.toggleTimeline}
-              >
-                {showTimeline ? 'Hide timeline' : 'Show timeline'}
-              </button>
-            </div>
-          </div>
         </div>
         {showVisits && (
           <div>
@@ -259,7 +261,9 @@ class Result extends React.Component {
                 textAlign: 'center'
               }}
             >
-              Showing event IDs in SD range {showVisitsLabel}{' '}
+              Showing event IDs in SD range {showVisitsLabel} ({
+                Object.values(showVisits).length
+              }){' '}
               <button
                 style={{
                   height: 42,
