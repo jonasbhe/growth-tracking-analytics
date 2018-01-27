@@ -36,7 +36,6 @@ class Result extends React.Component {
       zscore,
       label,
       distribution,
-      averages,
       totals,
       max,
       timeline,

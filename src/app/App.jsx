@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
@@ -11,8 +12,6 @@ import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
 
 import Sidebar from './components/Sidebar.jsx';
 import Mainpage from './components/Mainpage.jsx';
-
-import injectTapEventPlugin from 'react-tap-event-plugin';
 
 const HeaderBar = withStateFrom(headerBarStore$, HeaderBarComponent);
 

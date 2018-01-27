@@ -8,7 +8,7 @@ class TotalRow extends React.Component {
   toggleHover = () => this.setState(state => ({ hovered: !state.hovered }));
 
   render() {
-    const { index, label, total, max, toggleVisits } = this.props;
+    const { label, total, max, toggleVisits } = this.props;
     const { hovered } = this.state;
 
     return (

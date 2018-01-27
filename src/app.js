@@ -1,15 +1,3 @@
-// When the app is built for development, DHIS_CONFIG is replaced with the config read from $DHIS2_HOME/config.js[on]
-// When the app is built for production, process.env.NODE_ENV is replaced with the string 'production', and
-// DHIS_CONFIG is replaced with an empty object
-const dhisDevConfig = DHIS_CONFIG; // eslint-disable-line
-
-// This code will only be included in non-production builds of the app
-// It sets up the Authorization header to be used during CORS requests
-// This way we can develop using webpack without having to install the application into DHIS2.
-if (process.env.NODE_ENV !== 'production') {
-  jQuery.ajaxSetup({ headers: { Authorization: dhisDevConfig.authorization } }); // eslint-disable-line
-}
-
 import React from 'react';
 import { render } from 'react-dom';
 import { init, config, getManifest } from 'd2/lib/d2';
@@ -23,6 +11,18 @@ import 'react-tap-event-plugin';
 
 import './app.css';
 import App from './app/App.jsx';
+
+// When the app is built for development, DHIS_CONFIG is replaced with the config read from $DHIS2_HOME/config.js[on]
+// When the app is built for production, process.env.NODE_ENV is replaced with the string 'production', and
+// DHIS_CONFIG is replaced with an empty object
+const dhisDevConfig = DHIS_CONFIG; // eslint-disable-line
+
+// This code will only be included in non-production builds of the app
+// It sets up the Authorization header to be used during CORS requests
+// This way we can develop using webpack without having to install the application into DHIS2.
+if (process.env.NODE_ENV !== 'production') {
+  jQuery.ajaxSetup({ headers: { Authorization: dhisDevConfig.authorization } }); // eslint-disable-line
+}
 
 // Render the a LoadingMask to show the user the app is in loading
 // The consecutive render after we did our setup will replace this loading mask
