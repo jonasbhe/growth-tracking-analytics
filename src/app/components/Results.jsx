@@ -1,6 +1,7 @@
 import React from 'react';
 import Result from './Result.jsx';
 import SkippedList from './SkippedList.jsx';
+import Button from './Button.jsx';
 
 class Results extends React.Component {
   state = {
@@ -12,12 +13,7 @@ class Results extends React.Component {
 
   render() {
     const {
-      averages,
-      events,
-      distribution,
-      totals,
-      timeline,
-      skipped,
+      eventData,
       ouName,
       startDate,
       endDate,
@@ -27,30 +23,25 @@ class Results extends React.Component {
     } = this.props;
     const { showSkipped } = this.state;
 
+    const {
+      events,
+      averages,
+      totals,
+      distribution,
+      skipped,
+      timeline
+    } = eventData;
+
     if (Object.values(averages).length === 0) return null;
 
     return (
       <div id="printable">
-        <button
-          id="noprint"
-          style={{
-            flex: '0',
-            height: 22,
-            background: 'unset',
-            cursor: 'pointer',
-            backgroundColor: '#296596',
-            color: 'white',
-            fontSize: '0.7rem',
-            paddingLeft: '0.5rem',
-            paddingRight: '0.5rem',
-            border: 'none',
-            float: 'left',
-            marginLeft: 10
-          }}
+        <Button
+          label="Print results"
           onClick={() => window.print()}
-        >
-          Print results
-        </button>
+          small
+          style={{ marginLeft: 10, float: 'left' }}
+        />
 
         <div
           style={{
@@ -96,24 +87,11 @@ class Results extends React.Component {
         </div>
 
         <div style={{ textAlign: 'center' }}>
-          <button
-            id="noprint"
-            style={{
-              flex: '0',
-              height: 22,
-              background: 'unset',
-              cursor: 'pointer',
-              backgroundColor: '#296596',
-              color: 'white',
-              fontSize: '0.7rem',
-              paddingLeft: '0.5rem',
-              paddingRight: '0.5rem',
-              border: 'none'
-            }}
+          <Button
+            label={showSkipped ? 'Hide skipped' : 'Show skipped'}
             onClick={this.toggleShowSkipped}
-          >
-            {showSkipped ? 'Hide skipped' : 'Show skipped'}
-          </button>
+            small
+          />
         </div>
 
         {showSkipped && <SkippedList skipped={skipped} />}

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Button from './Button.jsx';
+
 class Filter extends React.Component {
   state = {
     gender: 'both',
@@ -32,57 +34,33 @@ class Filter extends React.Component {
             >
               Filter by gender
             </div>
-            <button
-              style={{
-                height: 42,
-                background: 'unset',
-                cursor: 'pointer',
-                backgroundColor: gender === 'female' ? '#296596' : '#9c9c9c',
-                color: 'white',
-                fontSize: '1.1rem',
-                paddingLeft: '1rem',
-                paddingRight: '1rem',
-                border: 'none',
-                margin: 5
-              }}
+
+            <Button
+              label="Female"
               onClick={() => this.setGenderFilter('female')}
-            >
-              Girls
-            </button>
-            <button
               style={{
-                height: 42,
-                background: 'unset',
-                cursor: 'pointer',
-                backgroundColor: gender === 'male' ? '#296596' : '#9c9c9c',
-                color: 'white',
-                fontSize: '1.1rem',
-                paddingLeft: '1rem',
-                paddingRight: '1rem',
-                border: 'none',
-                margin: 5
+                margin: 5,
+                backgroundColor: gender === 'female' ? '#296596' : '#9c9c9c'
               }}
+            />
+
+            <Button
+              label="Male"
               onClick={() => this.setGenderFilter('male')}
-            >
-              Boys
-            </button>
-            <button
               style={{
-                height: 42,
-                background: 'unset',
-                cursor: 'pointer',
-                backgroundColor: gender === 'both' ? '#296596' : '#9c9c9c',
-                color: 'white',
-                fontSize: '1.1rem',
-                paddingLeft: '1rem',
-                paddingRight: '1rem',
-                border: 'none',
-                margin: 5
+                margin: 5,
+                backgroundColor: gender === 'male' ? '#296596' : '#9c9c9c'
               }}
+            />
+
+            <Button
+              label="Both"
               onClick={() => this.setGenderFilter('both')}
-            >
-              Both
-            </button>
+              style={{
+                margin: 5,
+                backgroundColor: gender === 'both' ? '#296596' : '#9c9c9c'
+              }}
+            />
           </div>
 
           <div style={{ margin: 10 }}>
@@ -140,22 +118,10 @@ class Filter extends React.Component {
           </div>
         </div>
         <div style={{ textAlign: 'center' }}>
-          <button
-            style={{
-              height: 42,
-              background: 'unset',
-              cursor: 'pointer',
-              backgroundColor: '#296596',
-              color: 'white',
-              fontSize: '1.1rem',
-              paddingLeft: '1rem',
-              paddingRight: '1rem',
-              border: 'none'
-            }}
+          <Button
+            label="Apply filter"
             onClick={() => updateFilter(this.state)}
-          >
-            Apply filter
-          </button>
+          />
         </div>
       </div>
     );

@@ -4,6 +4,7 @@ import getColor from '../../formulas/getColor';
 import TimelineChart from './TimelineChart.jsx';
 import DistributionChart from './DistributionChart.jsx';
 import TotalRow from './TotalRow.jsx';
+import Button from './Button.jsx';
 
 class Result extends React.Component {
   state = {
@@ -216,46 +217,26 @@ class Result extends React.Component {
               }}
             >
               <div style={{ textAlign: 'center' }}>
-                <button
-                  id="noprint"
+                <Button
+                  label={
+                    showDistribution ? 'Hide distribution' : 'Show distribution'
+                  }
+                  onClick={this.toggleDistribution}
                   style={{
-                    height: 42,
-                    background: 'unset',
-                    cursor: 'pointer',
-                    backgroundColor: '#296596',
-                    color: 'white',
-                    fontSize: '1.1rem',
-                    paddingLeft: '1rem',
-                    paddingRight: '1rem',
-                    border: 'none',
                     width: 110,
                     margin: 5
                   }}
-                  onClick={this.toggleDistribution}
-                >
-                  {showDistribution ? 'Hide distribution' : 'Show distribution'}
-                </button>
+                />
               </div>
               <div>
-                <button
-                  id="noprint"
+                <Button
+                  label={showTimeline ? 'Hide timeline' : 'Show timeline'}
+                  onClick={this.toggleTimeline}
                   style={{
-                    height: 42,
-                    background: 'unset',
-                    cursor: 'pointer',
-                    backgroundColor: '#296596',
-                    color: 'white',
-                    fontSize: '1.1rem',
-                    paddingLeft: '1rem',
-                    paddingRight: '1rem',
-                    border: 'none',
                     width: 110,
                     margin: 5
                   }}
-                  onClick={this.toggleTimeline}
-                >
-                  {showTimeline ? 'Hide timeline' : 'Show timeline'}
-                </button>
+                />
               </div>
             </div>
           </div>
@@ -273,22 +254,11 @@ class Result extends React.Component {
               Showing event IDs in SD range {showVisitsLabel} ({
                 Object.values(showVisits).length
               }){' '}
-              <button
-                style={{
-                  height: 42,
-                  background: 'unset',
-                  cursor: 'pointer',
-                  backgroundColor: '#296596',
-                  color: 'white',
-                  fontSize: '1.1rem',
-                  paddingLeft: '1rem',
-                  paddingRight: '1rem',
-                  border: 'none'
-                }}
+              <Button
+                label="Hide"
                 onClick={() => this.toggleVisits(null, null)}
-              >
-                Hide
-              </button>
+                small
+              />
             </div>
             <div
               style={{

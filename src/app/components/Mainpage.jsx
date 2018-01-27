@@ -4,6 +4,7 @@ import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
 import Datepicker from './Datepicker.jsx';
 import Results from './Results.jsx';
 import Filter from './Filter.jsx';
+import Button from './Button.jsx';
 
 import {
   getWeightForLength,
@@ -533,15 +534,6 @@ class Mainpage extends React.Component {
     const trackedEntityInstances = this.mapTrackedEntityInstances();
     const eventData = this.mapEvents(trackedEntityInstances);
 
-    const {
-      events,
-      averages,
-      totals,
-      distribution,
-      skipped,
-      timeline
-    } = eventData;
-
     return (
       <div
         style={{
@@ -597,24 +589,15 @@ class Mainpage extends React.Component {
             marginBottom: 10
           }}
         >
-          <button
+          <Button
+            label="Get events"
+            onClick={getEvents}
             style={{
-              height: 42,
-              background: 'unset',
-              cursor: 'pointer',
               backgroundColor:
-                !ouName || ouLevel < 4 || loading ? '#9c9c9c' : '#296596',
-              color: 'white',
-              fontSize: '1.1rem',
-              paddingLeft: '1rem',
-              paddingRight: '1rem',
-              border: 'none'
+                !ouName || ouLevel < 4 || loading ? '#9c9c9c' : '#296596'
             }}
             disabled={!ouName || ouLevel < 4 || loading}
-            onClick={getEvents}
-          >
-            Get events
-          </button>
+          />
         </div>
 
         <hr style={{ border: '1px solid #f3f3f3' }} />
@@ -649,12 +632,7 @@ class Mainpage extends React.Component {
               <hr style={{ border: '1px solid #f3f3f3' }} />
 
               <Results
-                events={events}
-                averages={averages}
-                distribution={distribution}
-                totals={totals}
-                timeline={timeline}
-                skipped={skipped}
+                eventData={eventData}
                 ouName={ouName}
                 startDate={startDate}
                 endDate={endDate}
