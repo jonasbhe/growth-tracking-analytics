@@ -99,7 +99,8 @@ class Results extends React.Component {
         <div
           style={{
             display: 'flex',
-            flexDirection: 'column'
+            flexDirection: 'column',
+            marginTop: 50
           }}
         >
           <Result
