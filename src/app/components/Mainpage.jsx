@@ -528,6 +528,7 @@ class Mainpage extends React.Component {
       getEvents,
       loading
     } = this.props;
+    const { gender, minAge, maxAge } = this.state;
 
     const trackedEntityInstances = this.mapTrackedEntityInstances();
     const eventData = this.mapEvents(trackedEntityInstances);
@@ -655,6 +656,11 @@ class Mainpage extends React.Component {
                 timeline={timeline}
                 skipped={skipped}
                 ouName={ouName}
+                startDate={startDate}
+                endDate={endDate}
+                gender={gender}
+                minAge={minAge}
+                maxAge={maxAge}
               />
             </div>
           )}

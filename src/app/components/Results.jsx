@@ -18,7 +18,12 @@ class Results extends React.Component {
       totals,
       timeline,
       skipped,
-      ouName
+      ouName,
+      startDate,
+      endDate,
+      gender,
+      minAge,
+      maxAge
     } = this.props;
     const { showSkipped } = this.state;
 
@@ -93,6 +98,12 @@ class Results extends React.Component {
             totals={totals.wfa}
             max={Object.values(events).length}
             timeline={timeline.weekly.wfa}
+            ouName={ouName}
+            startDate={startDate}
+            endDate={endDate}
+            gender={gender}
+            minAge={minAge}
+            maxAge={maxAge}
           />
 
           <Result
@@ -106,6 +117,12 @@ class Results extends React.Component {
             totals={totals.wfl}
             max={Object.values(events).length}
             timeline={timeline.weekly.wfl}
+            ouName={ouName}
+            startDate={startDate}
+            endDate={endDate}
+            gender={gender}
+            minAge={minAge}
+            maxAge={maxAge}
           />
           <Result
             label="Length-for-age"
@@ -118,6 +135,12 @@ class Results extends React.Component {
             totals={totals.lhfa}
             max={Object.values(events).length}
             timeline={timeline.weekly.lhfa}
+            ouName={ouName}
+            startDate={startDate}
+            endDate={endDate}
+            gender={gender}
+            minAge={minAge}
+            maxAge={maxAge}
           />
           <Result
             label="BMI-for-age"
@@ -130,6 +153,12 @@ class Results extends React.Component {
             totals={totals.bfa}
             max={Object.values(events).length}
             timeline={timeline.weekly.bfa}
+            ouName={ouName}
+            startDate={startDate}
+            endDate={endDate}
+            gender={gender}
+            minAge={minAge}
+            maxAge={maxAge}
           />
           <Result
             label="MUAC-for-age"
@@ -142,6 +171,12 @@ class Results extends React.Component {
             totals={totals.acfa}
             max={Object.values(events).length}
             timeline={timeline.weekly.acfa}
+            ouName={ouName}
+            startDate={startDate}
+            endDate={endDate}
+            gender={gender}
+            minAge={minAge}
+            maxAge={maxAge}
           />
         </div>
       </div>

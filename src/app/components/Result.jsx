@@ -38,7 +38,13 @@ class Result extends React.Component {
       averages,
       totals,
       max,
-      timeline
+      timeline,
+      ouName,
+      startDate,
+      endDate,
+      gender,
+      minAge,
+      maxAge
     } = this.props;
     const {
       showDistribution,
@@ -298,9 +304,29 @@ class Result extends React.Component {
           </div>
         )}
         {showDistribution && (
-          <DistributionChart label={label} distribution={distribution} />
+          <DistributionChart
+            label={label}
+            distribution={distribution}
+            ouName={ouName}
+            startDate={startDate}
+            endDate={endDate}
+            gender={gender}
+            minAge={minAge}
+            maxAge={maxAge}
+          />
         )}
-        {showTimeline && <TimelineChart label={label} timeline={timeline} />}
+        {showTimeline && (
+          <TimelineChart
+            label={label}
+            timeline={timeline}
+            ouName={ouName}
+            startDate={startDate}
+            endDate={endDate}
+            gender={gender}
+            minAge={minAge}
+            maxAge={maxAge}
+          />
+        )}
 
         <hr style={{ border: '1px solid #f3f3f3' }} />
       </div>

@@ -16,7 +16,16 @@ const getPlotline = (value, label) => ({
   }
 });
 
-const TimelineChart = ({ label, timeline }) => {
+const TimelineChart = ({
+  label,
+  timeline,
+  ouName,
+  startDate,
+  endDate,
+  gender,
+  minAge,
+  maxAge
+}) => {
   const timelineData = Object.entries(timeline).map(val => [
     Number(val[0]),
     val[1].reduce((acc, v) => acc + v, 0) / val[1].length
@@ -38,7 +47,14 @@ const TimelineChart = ({ label, timeline }) => {
       type: 'spline'
     },
     title: {
-      text: `${label} z-score timeline`
+      text: `${label} z-score timeline ${ouName}`
+    },
+    subtitle: {
+      text: `${startDate
+        .toISOString()
+        .substring(0, 10)} to ${endDate
+        .toISOString()
+        .substring(0, 10)}, gender: ${gender}, age: ${minAge} to ${maxAge}`
     },
     xAxis: {
       crosshair: true,

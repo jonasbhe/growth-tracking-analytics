@@ -4,7 +4,16 @@ import HighchartsExporting from 'highcharts-exporting';
 
 HighchartsExporting(ReactHighcharts.Highcharts);
 
-const DistributionChart = ({ label, distribution }) => {
+const DistributionChart = ({
+  label,
+  distribution,
+  ouName,
+  startDate,
+  endDate,
+  gender,
+  minAge,
+  maxAge
+}) => {
   const distributionData = Object.entries(distribution)
     .sort((a, b) => a[0] - b[0])
     .map(d => [Number(d[0]), d[1]]);
@@ -20,7 +29,14 @@ const DistributionChart = ({ label, distribution }) => {
       type: 'column'
     },
     title: {
-      text: `${label} z-score distribution`
+      text: `${label} z-score distribution ${ouName}`
+    },
+    subtitle: {
+      text: `${startDate
+        .toISOString()
+        .substring(0, 10)} to ${endDate
+        .toISOString()
+        .substring(0, 10)}, gender: ${gender}, age: ${minAge} to ${maxAge}`
     },
     xAxis: {
       crosshair: true,
