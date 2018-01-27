@@ -35,11 +35,25 @@ class Results extends React.Component {
           style={{
             textAlign: 'center',
             fontSize: '2.2rem',
-            margin: 10,
             color: '#777777'
           }}
         >
           Results for {Object.values(events).length} events from {ouName}
+        </div>
+
+        <div
+          style={{
+            fontSize: '1rem',
+            color: '#777777',
+            textAlign: 'center',
+            marginBottom: 10
+          }}
+        >
+          {`${startDate
+            .toISOString()
+            .substring(0, 10)} to ${endDate
+            .toISOString()
+            .substring(0, 10)}, gender: ${gender}, age: ${minAge} to ${maxAge}`}
         </div>
 
         <div

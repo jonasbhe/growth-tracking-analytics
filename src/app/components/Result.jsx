@@ -65,6 +65,7 @@ class Result extends React.Component {
         >
           {label}
         </div>
+
         <div
           style={{
             display: 'flex',
