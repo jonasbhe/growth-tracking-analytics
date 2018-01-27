@@ -57,7 +57,7 @@ class Result extends React.Component {
       <div>
         <div
           style={{
-            fontSize: '2.5rem',
+            fontSize: '2.2rem',
             margin: 10,
             color: '#777777',
             textAlign: 'center'
@@ -76,92 +76,6 @@ class Result extends React.Component {
             flexWrap: 'wrap'
           }}
         >
-          <div
-            style={{
-              flex: 'auto',
-              fontSize: '1.8rem',
-              color: '#777777',
-              justifyContent: 'center',
-              display: 'flex',
-              flexDirection: 'column'
-            }}
-          >
-            Average z-score
-            <div>
-              <div
-                // Circle style
-                style={{
-                  borderRadius: '100%',
-                  width: 80,
-                  height: 80,
-                  border: `6px solid ${getColor(zscore)}`,
-                  margin: 'auto'
-                }}
-              >
-                <div
-                  // Z-score text style
-                  style={{
-                    color: getColor(zscore),
-                    paddingTop: 15,
-                    fontWeight: 'bold',
-                    fontSize: '2.7rem',
-                    marginTop: 2
-                  }}
-                >
-                  {zscore}
-                </div>
-              </div>
-            </div>
-            <div
-              style={{
-                flex: 'auto',
-                display: 'flex',
-                justifyContent: 'center',
-                marginTop: 10
-              }}
-            >
-              <div style={{ textAlign: 'center' }}>
-                <button
-                  style={{
-                    height: 42,
-                    background: 'unset',
-                    cursor: 'pointer',
-                    backgroundColor: '#296596',
-                    color: 'white',
-                    fontSize: '1.1rem',
-                    paddingLeft: '1rem',
-                    paddingRight: '1rem',
-                    border: 'none',
-                    width: 110,
-                    margin: 5
-                  }}
-                  onClick={this.toggleDistribution}
-                >
-                  {showDistribution ? 'Hide distribution' : 'Show distribution'}
-                </button>
-              </div>
-              <div>
-                <button
-                  style={{
-                    height: 42,
-                    background: 'unset',
-                    cursor: 'pointer',
-                    backgroundColor: '#296596',
-                    color: 'white',
-                    fontSize: '1.1rem',
-                    paddingLeft: '1rem',
-                    paddingRight: '1rem',
-                    border: 'none',
-                    width: 110,
-                    margin: 5
-                  }}
-                  onClick={this.toggleTimeline}
-                >
-                  {showTimeline ? 'Hide timeline' : 'Show timeline'}
-                </button>
-              </div>
-            </div>
-          </div>
           <div style={{ flex: 'auto' }}>
             <div style={{ display: 'flex' }}>
               <div
@@ -256,6 +170,94 @@ class Result extends React.Component {
               max={max}
               toggleVisits={this.toggleVisits}
             />
+          </div>
+          <div
+            style={{
+              flex: 'auto',
+              fontSize: '1.8rem',
+              color: '#777777',
+              justifyContent: 'center',
+              display: 'flex',
+              flexDirection: 'column'
+            }}
+          >
+            Average z-score
+            <div>
+              <div
+                // Circle style
+                style={{
+                  borderRadius: '100%',
+                  width: 80,
+                  height: 80,
+                  border: `6px solid ${getColor(zscore)}`,
+                  margin: 'auto'
+                }}
+              >
+                <div
+                  // Z-score text style
+                  style={{
+                    color: getColor(zscore),
+                    paddingTop: 15,
+                    fontWeight: 'bold',
+                    fontSize: '2.7rem',
+                    marginTop: 2
+                  }}
+                >
+                  {zscore}
+                </div>
+              </div>
+            </div>
+            <div
+              style={{
+                flex: 'auto',
+                display: 'flex',
+                justifyContent: 'center',
+                marginTop: 10
+              }}
+            >
+              <div style={{ textAlign: 'center' }}>
+                <button
+                  id="noprint"
+                  style={{
+                    height: 42,
+                    background: 'unset',
+                    cursor: 'pointer',
+                    backgroundColor: '#296596',
+                    color: 'white',
+                    fontSize: '1.1rem',
+                    paddingLeft: '1rem',
+                    paddingRight: '1rem',
+                    border: 'none',
+                    width: 110,
+                    margin: 5
+                  }}
+                  onClick={this.toggleDistribution}
+                >
+                  {showDistribution ? 'Hide distribution' : 'Show distribution'}
+                </button>
+              </div>
+              <div>
+                <button
+                  id="noprint"
+                  style={{
+                    height: 42,
+                    background: 'unset',
+                    cursor: 'pointer',
+                    backgroundColor: '#296596',
+                    color: 'white',
+                    fontSize: '1.1rem',
+                    paddingLeft: '1rem',
+                    paddingRight: '1rem',
+                    border: 'none',
+                    width: 110,
+                    margin: 5
+                  }}
+                  onClick={this.toggleTimeline}
+                >
+                  {showTimeline ? 'Hide timeline' : 'Show timeline'}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
         {showVisits && (

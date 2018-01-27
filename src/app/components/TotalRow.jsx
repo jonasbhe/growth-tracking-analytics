@@ -61,7 +61,12 @@ class TotalRow extends React.Component {
             {Math.round(total.sum / max * 1000) / 10}%
           </div>
         </div>
-        <i style={{ flex: '0' }} className="fa fa-list" aria-hidden="true" />
+        <i
+          id="noprint"
+          style={{ flex: '0' }}
+          className="fa fa-list"
+          aria-hidden="true"
+        />
       </div>
     );
   }

@@ -1,10 +1,12 @@
 import React from 'react';
 import ReactHighcharts from 'react-highcharts';
 import HighchartsExporting from 'highcharts-exporting';
+import HighchartsOfflineExporting from 'highcharts-offline-exporting';
 
 import getColor from '../../formulas/getColor';
 
 HighchartsExporting(ReactHighcharts.Highcharts);
+HighchartsOfflineExporting(ReactHighcharts.Highcharts);
 
 const getPlotline = (value, label) => ({
   value,
@@ -128,7 +130,7 @@ const TimelineChart = ({
       }
     ],
     exporting: {
-      enabled: true
+      fallbackToExportServer: false
     }
   };
 

@@ -28,6 +28,7 @@
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "highcharts-exporting": "^0.1.7",
+    "highcharts-offline-exporting": "^0.1.7",
     "jquery": "^2.2.3",
     "prop-types": "^15.6.0",
     "react-flatpickr": "^3.6.3",

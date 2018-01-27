@@ -30,12 +30,34 @@ class Results extends React.Component {
     if (Object.values(averages).length === 0) return null;
 
     return (
-      <div>
+      <div id="printable">
+        <button
+          id="noprint"
+          style={{
+            flex: '0',
+            height: 22,
+            background: 'unset',
+            cursor: 'pointer',
+            backgroundColor: '#296596',
+            color: 'white',
+            fontSize: '0.7rem',
+            paddingLeft: '0.5rem',
+            paddingRight: '0.5rem',
+            border: 'none',
+            float: 'left',
+            marginLeft: 10
+          }}
+          onClick={() => window.print()}
+        >
+          Print results
+        </button>
+
         <div
           style={{
             textAlign: 'center',
             fontSize: '2.2rem',
-            color: '#777777'
+            color: '#777777',
+            clear: 'both'
           }}
         >
           Results for {Object.values(events).length} events from {ouName}
@@ -69,12 +91,13 @@ class Results extends React.Component {
               color: '#777777'
             }}
           >
-            Skipped {Object.values(skipped).length} events.
+            Skipped {Object.values(skipped).length} events
           </div>
         </div>
 
         <div style={{ textAlign: 'center' }}>
           <button
+            id="noprint"
             style={{
               flex: '0',
               height: 22,

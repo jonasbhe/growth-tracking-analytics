@@ -1,8 +1,10 @@
 import React from 'react';
 import ReactHighcharts from 'react-highcharts';
 import HighchartsExporting from 'highcharts-exporting';
+import HighchartsOfflineExporting from 'highcharts-offline-exporting';
 
 HighchartsExporting(ReactHighcharts.Highcharts);
+HighchartsOfflineExporting(ReactHighcharts.Highcharts);
 
 const DistributionChart = ({
   label,
@@ -96,7 +98,7 @@ const DistributionChart = ({
       }
     ],
     exporting: {
-      enabled: true
+      fallbackToExportServer: false
     }
   };
 

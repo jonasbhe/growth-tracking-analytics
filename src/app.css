@@ -26,3 +26,20 @@ input.flatpickr-input {
   text-align: center;
   color: rgb(119, 119, 119);
 }
+
+@media print {
+  #printable {
+    visibility: visible;
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    overflow: visible;
+  }
+  #app {
+    visibility: hidden;
+  }
+  #noprint {
+    display: none;
+  }
+}
