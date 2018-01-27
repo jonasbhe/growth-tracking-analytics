@@ -1,5 +1,6 @@
 import React from 'react';
 import Result from './Result.jsx';
+import SkippedList from './SkippedList.jsx';
 
 class Results extends React.Component {
   state = {
@@ -16,13 +17,12 @@ class Results extends React.Component {
       distribution,
       totals,
       timeline,
-      skipped
+      skipped,
+      ouName
     } = this.props;
     const { showSkipped } = this.state;
 
     if (Object.values(averages).length === 0) return null;
-
-    console.log(skipped);
 
     return (
       <div>
@@ -34,7 +34,8 @@ class Results extends React.Component {
             color: '#777777'
           }}
         >
-          Showing results for {Object.values(events).length} events
+          Showing results for {Object.values(events).length} events from{' '}
+          {ouName}
         </div>
 
         <div
@@ -74,80 +75,11 @@ class Results extends React.Component {
           </button>
         </div>
 
-        {showSkipped && (
-          <div
-            style={{
-              maxHeight: 286,
-              overflow: 'auto',
-              borderStyle: 'solid',
-              borderLeft: 'none',
-              borderRight: 'none',
-              borderWidth: 1
-            }}
-          >
-            <table
-              style={{
-                width: '100%'
-              }}
-            >
-              <thead>
-                <tr>
-                  <th
-                    style={{
-                      textAlign: 'left',
-                      fontSize: '1.5rem',
-                      paddingLeft: 10,
-                      paddingRight: 10
-                    }}
-                  >
-                    Event ID
-                  </th>
-                  <th
-                    style={{
-                      textAlign: 'left',
-                      fontSize: '1.5rem',
-                      paddingLeft: 10,
-                      paddingRight: 10
-                    }}
-                  >
-                    Reason
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {Object.values(skipped)
-                  .sort((a, b) => a.sortOrder < b.sortOrder)
-                  .map(event => (
-                    <tr>
-                      <td
-                        style={{
-                          width: '1%',
-                          paddingLeft: 10,
-                          paddingRight: 10
-                        }}
-                      >
-                        {event.id}
-                      </td>
-                      <td
-                        style={{
-                          width: 'auto',
-                          paddingLeft: 10,
-                          paddingRight: 10
-                        }}
-                      >
-                        {event.reason}
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        {showSkipped && <SkippedList skipped={skipped} />}
 
         <div
           style={{
             display: 'flex',
-            flexWrap: 'wrap',
             flexDirection: 'column'
           }}
         >

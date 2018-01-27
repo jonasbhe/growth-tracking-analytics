@@ -4,6 +4,20 @@ import getColor from '../../formulas/getColor';
 import TimelineChart from './TimelineChart.jsx';
 import DistributionChart from './DistributionChart.jsx';
 
+const TotalRow = ({ label, total, max }) => (
+  <div
+    style={{
+      display: 'flex',
+      borderTop: '1px solid #f3f3f3'
+    }}
+  >
+    <div style={{ flex: '1', paddingLeft: 10, paddingRight: 10 }}>{label}</div>
+    <div style={{ flex: '1', paddingLeft: 10, paddingRight: 10 }}>{total}</div>
+    <div style={{ flex: '1', paddingLeft: 10, paddingRight: 10 }}>
+      {Math.round(total / max * 1000) / 10}%
+    </div>
+  </div>
+);
 
 class Result extends React.Component {
   state = {
@@ -33,15 +47,32 @@ class Result extends React.Component {
       <div>
         <div
           style={{
-            fontSize: '1.8rem',
+            fontSize: '2.5rem',
             margin: 10,
-            color: '#777777'
+            color: '#777777',
+            textAlign: 'center'
           }}
         >
           {label}
         </div>
-        <div style={{ display: 'flex', textAlign: 'center' }}>
-          <div style={{ flex: 'auto' }}>
+        <div
+          style={{
+            display: 'flex',
+            textAlign: 'center',
+            marginBottom: 10,
+            flexWrap: 'wrap'
+          }}
+        >
+          <div
+            style={{
+              flex: 'auto',
+              fontSize: '1.8rem',
+              color: '#777777',
+              justifyContent: 'center',
+              display: 'flex',
+              flexDirection: 'column'
+            }}
+          >
             Average z-score
             <div>
               <div
@@ -73,103 +104,96 @@ class Result extends React.Component {
             <div style={{ display: 'flex' }}>
               <div
                 style={{
-                  flex: 'auto',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  textAlign: 'left'
+                  flex: '1',
+                  fontSize: '1.5rem',
+                  color: '#777777'
                 }}
               >
-                <div>SD-range</div>
-                <div>-3 SD</div>
-                <div>-2 SD</div>
-                <div>-1 SD</div>
-                <div>0 SD</div>
-                <div>+1 SD</div>
-                <div>+2 SD</div>
-                <div>+3 SD</div>
+                SD-range
               </div>
               <div
                 style={{
-                  flex: 'auto',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  textAlign: 'right'
+                  flex: '1',
+                  fontSize: '1.5rem',
+                  color: '#777777'
                 }}
               >
-                <div>Total</div>
-                <div>{totals.SD3neg}</div>
-                <div>{totals.SD2neg}</div>
-                <div>{totals.SD1neg}</div>
-                <div>{totals.SD0}</div>
-                <div>{totals.SD1}</div>
-                <div>{totals.SD2}</div>
-                <div>{totals.SD3}</div>
+                Total
               </div>
               <div
                 style={{
-                  flex: 'auto',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  textAlign: 'right'
+                  flex: '1',
+                  fontSize: '1.5rem',
+                  color: '#777777'
                 }}
               >
-                <div>Percentage</div>
-                <div>{Math.round(totals.SD3neg / max * 1000) / 10}%</div>
-                <div>{Math.round(totals.SD2neg / max * 1000) / 10}%</div>
-                <div>{Math.round(totals.SD1neg / max * 1000) / 10}%</div>
-                <div>{Math.round(totals.SD0 / max * 1000) / 10}%</div>
-                <div>{Math.round(totals.SD1 / max * 1000) / 10}%</div>
-                <div>{Math.round(totals.SD2 / max * 1000) / 10}%</div>
-                <div>{Math.round(totals.SD3 / max * 1000) / 10}%</div>
+                Percentage
               </div>
             </div>
+            <TotalRow label="- to -3" total={totals.SD3neg} max={max} />
+            <TotalRow label="-3 to -2" total={totals.SD2neg} max={max} />
+            <TotalRow label="-2 to -1" total={totals.SD1neg} max={max} />
+            <TotalRow label="-1 to 1" total={totals.SD0} max={max} />
+            <TotalRow label="1 to 2" total={totals.SD1} max={max} />
+            <TotalRow label="2 to 3" total={totals.SD2} max={max} />
+            <TotalRow label="3 to -" total={totals.SD3} max={max} />
           </div>
-          <button
+          <div
             style={{
               flex: 'auto',
-              height: 42,
-              background: 'unset',
-              cursor: 'pointer',
-              backgroundColor: '#296596',
-              color: 'white',
-              fontSize: '1.1rem',
-              paddingLeft: '1rem',
-              paddingRight: '1rem',
-              border: 'none'
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center'
             }}
-            onClick={this.toggleDistribution}
           >
-            Show distribution
-          </button>
-          <button
-            style={{
-              flex: 'auto',
-              height: 42,
-              background: 'unset',
-              cursor: 'pointer',
-              backgroundColor: '#296596',
-              color: 'white',
-              fontSize: '1.1rem',
-              paddingLeft: '1rem',
-              paddingRight: '1rem',
-              border: 'none'
-            }}
-            onClick={this.toggleTimeline}
-          >
-            Show timeline
-          </button>
+            <div style={{ textAlign: 'center' }}>
+              <button
+                style={{
+                  height: 42,
+                  background: 'unset',
+                  cursor: 'pointer',
+                  backgroundColor: '#296596',
+                  color: 'white',
+                  fontSize: '1.1rem',
+                  paddingLeft: '1rem',
+                  paddingRight: '1rem',
+                  border: 'none',
+                  width: 125,
+                  margin: 5
+                }}
+                onClick={this.toggleDistribution}
+              >
+                {showDistribution ? 'Hide distribution' : 'Show distribution'}
+              </button>
+            </div>
+            <div>
+              <button
+                style={{
+                  height: 42,
+                  background: 'unset',
+                  cursor: 'pointer',
+                  backgroundColor: '#296596',
+                  color: 'white',
+                  fontSize: '1.1rem',
+                  paddingLeft: '1rem',
+                  paddingRight: '1rem',
+                  border: 'none',
+                  width: 125,
+                  margin: 5
+                }}
+                onClick={this.toggleTimeline}
+              >
+                {showTimeline ? 'Hide timeline' : 'Show timeline'}
+              </button>
+            </div>
+          </div>
         </div>
+        {showDistribution && (
+          <DistributionChart label={label} distribution={distribution} />
+        )}
+        {showTimeline && <TimelineChart label={label} timeline={timeline} />}
 
-        <div
-          style={{
-            borderBottom: '1px solid #777777'
-          }}
-        >
-          {showDistribution && (
-            <DistributionChart label={label} distribution={distribution} />
-          )}
-          {showTimeline && <TimelineChart label={label} timeline={timeline} />}
-        </div>
+        <hr style={{ border: '1px solid #f3f3f3' }} />
       </div>
     );
   }

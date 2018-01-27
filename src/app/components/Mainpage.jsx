@@ -494,7 +494,9 @@ class Mainpage extends React.Component {
           Object.values(eventData).length > 0 && (
             <div>
               <Filter updateFilter={this.updateFilter} />
-              <hr />
+
+              <hr style={{ border: '1px solid #f3f3f3' }} />
+
               <Results
                 events={events}
                 averages={averages}
@@ -502,6 +504,7 @@ class Mainpage extends React.Component {
                 totals={totals}
                 timeline={timeline}
                 skipped={skipped}
+                ouName={ouName}
               />
             </div>
           )}
