@@ -3,26 +3,14 @@ import React from 'react';
 import getColor from '../../formulas/getColor';
 import TimelineChart from './TimelineChart.jsx';
 import DistributionChart from './DistributionChart.jsx';
-
-const TotalRow = ({ label, total, max }) => (
-  <div
-    style={{
-      display: 'flex',
-      borderTop: '1px solid #f3f3f3'
-    }}
-  >
-    <div style={{ flex: '1', paddingLeft: 10, paddingRight: 10 }}>{label}</div>
-    <div style={{ flex: '1', paddingLeft: 10, paddingRight: 10 }}>{total}</div>
-    <div style={{ flex: '1', paddingLeft: 10, paddingRight: 10 }}>
-      {Math.round(total / max * 1000) / 10}%
-    </div>
-  </div>
-);
+import TotalRow from './TotalRow.jsx';
 
 class Result extends React.Component {
   state = {
     showDistribution: false,
-    showTimeline: false
+    showTimeline: false,
+    showVisits: null,
+    showVisitsLabel: null
   };
 
   toggleDistribution = () =>
@@ -30,6 +18,17 @@ class Result extends React.Component {
 
   toggleTimeline = () =>
     this.setState(state => ({ showTimeline: !state.showTimeline }));
+
+  toggleVisits = (events, label) => {
+    if (
+      !this.state.showVisits ||
+      JSON.stringify(events) !== JSON.stringify(this.state.showVisits)
+    ) {
+      this.setState({ showVisits: events, showVisitsLabel: label });
+    } else {
+      this.setState({ showVisits: null, showVisitsLabel: null });
+    }
+  };
 
   render() {
     const {
@@ -41,7 +40,12 @@ class Result extends React.Component {
       max,
       timeline
     } = this.props;
-    const { showDistribution, showTimeline } = this.state;
+    const {
+      showDistribution,
+      showTimeline,
+      showVisits,
+      showVisitsLabel
+    } = this.state;
 
     return (
       <div>
@@ -106,7 +110,10 @@ class Result extends React.Component {
                 style={{
                   flex: '1',
                   fontSize: '1.5rem',
-                  color: '#777777'
+                  color: '#777777',
+                  textAlign: 'left',
+                  paddingLeft: 10,
+                  paddingRight: 10
                 }}
               >
                 SD-range
@@ -115,7 +122,10 @@ class Result extends React.Component {
                 style={{
                   flex: '1',
                   fontSize: '1.5rem',
-                  color: '#777777'
+                  color: '#777777',
+                  textAlign: 'right',
+                  paddingLeft: 10,
+                  paddingRight: 10
                 }}
               >
                 Total
@@ -124,19 +134,70 @@ class Result extends React.Component {
                 style={{
                   flex: '1',
                   fontSize: '1.5rem',
-                  color: '#777777'
+                  color: '#777777',
+                  textAlign: 'right',
+                  paddingLeft: 10,
+                  paddingRight: 10
                 }}
               >
                 Percentage
               </div>
+
+              <i
+                style={{ flex: '0', visibility: 'hidden' }}
+                className="fa fa-list"
+                aria-hidden="true"
+              />
             </div>
-            <TotalRow label="- to -3" total={totals.SD3neg} max={max} />
-            <TotalRow label="-3 to -2" total={totals.SD2neg} max={max} />
-            <TotalRow label="-2 to -1" total={totals.SD1neg} max={max} />
-            <TotalRow label="-1 to 1" total={totals.SD0} max={max} />
-            <TotalRow label="1 to 2" total={totals.SD1} max={max} />
-            <TotalRow label="2 to 3" total={totals.SD2} max={max} />
-            <TotalRow label="3 to -" total={totals.SD3} max={max} />
+            <TotalRow
+              index={1}
+              label="- to -3"
+              total={totals.SD3neg}
+              max={max}
+              toggleVisits={this.toggleVisits}
+            />
+            <TotalRow
+              index={2}
+              label="-3 to -2"
+              total={totals.SD2neg}
+              max={max}
+              toggleVisits={this.toggleVisits}
+            />
+            <TotalRow
+              index={3}
+              label="-2 to -1"
+              total={totals.SD1neg}
+              max={max}
+              toggleVisits={this.toggleVisits}
+            />
+            <TotalRow
+              index={4}
+              label="-1 to 1"
+              total={totals.SD0}
+              max={max}
+              toggleVisits={this.toggleVisits}
+            />
+            <TotalRow
+              index={5}
+              label="1 to 2"
+              total={totals.SD1}
+              max={max}
+              toggleVisits={this.toggleVisits}
+            />
+            <TotalRow
+              index={6}
+              label="2 to 3"
+              total={totals.SD2}
+              max={max}
+              toggleVisits={this.toggleVisits}
+            />
+            <TotalRow
+              index={7}
+              label="3 to -"
+              total={totals.SD3}
+              max={max}
+              toggleVisits={this.toggleVisits}
+            />
           </div>
           <div
             style={{
@@ -188,6 +249,50 @@ class Result extends React.Component {
             </div>
           </div>
         </div>
+        {showVisits && (
+          <div>
+            <div
+              style={{
+                fontSize: '1.8rem',
+                margin: 10,
+                color: '#777777',
+                textAlign: 'center'
+              }}
+            >
+              Showing event IDs in SD range {showVisitsLabel}{' '}
+              <button
+                style={{
+                  height: 42,
+                  background: 'unset',
+                  cursor: 'pointer',
+                  backgroundColor: '#296596',
+                  color: 'white',
+                  fontSize: '1.1rem',
+                  paddingLeft: '1rem',
+                  paddingRight: '1rem',
+                  border: 'none'
+                }}
+                onClick={() => this.toggleVisits(null, null)}
+              >
+                Hide
+              </button>
+            </div>
+            <div
+              style={{
+                maxHeight: 286,
+                overflow: 'auto',
+                borderTop: '1px solid #f3f3f3',
+                borderBottom: '1px solid #f3f3f3',
+                display: 'flex',
+                flexWrap: 'wrap'
+              }}
+            >
+              {Object.keys(showVisits).map(id => (
+                <div key={id}>{id}&nbsp;</div>
+              ))}
+            </div>
+          </div>
+        )}
         {showDistribution && (
           <DistributionChart label={label} distribution={distribution} />
         )}

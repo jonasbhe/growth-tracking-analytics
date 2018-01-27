@@ -23,14 +23,56 @@ class Mainpage extends React.Component {
 
   updateFilter = filter => this.setState({ ...filter });
 
-  addVisitToTotals = (value, totals) => ({
-    SD3neg: value <= -3 ? totals.SD3neg + 1 : totals.SD3neg,
-    SD2neg: value > -3 && value <= -2 ? totals.SD2neg + 1 : totals.SD2neg,
-    SD1neg: value > -2 && value <= -1 ? totals.SD1neg + 1 : totals.SD1neg,
-    SD0: value > -1 && value < 1 ? totals.SD0 + 1 : totals.SD0,
-    SD1: value >= 1 && value < 2 ? totals.SD1 + 1 : totals.SD1,
-    SD2: value >= 2 && value < 3 ? totals.SD2 + 1 : totals.SD2,
-    SD3: value >= 3 ? totals.SD3 + 1 : totals.SD3
+  addVisitToTotals = (value, totals, event) => ({
+    SD3neg:
+      value <= -3
+        ? {
+            sum: totals.SD3neg.sum + 1,
+            events: { ...totals.SD3neg.events, [event.id]: event }
+          }
+        : totals.SD3neg,
+    SD2neg:
+      value > -3 && value <= -2
+        ? {
+            sum: totals.SD2neg.sum + 1,
+            events: { ...totals.SD2neg.events, [event.id]: event }
+          }
+        : totals.SD2neg,
+    SD1neg:
+      value > -2 && value <= -1
+        ? {
+            sum: totals.SD1neg.sum + 1,
+            events: { ...totals.SD1neg.events, [event.id]: event }
+          }
+        : totals.SD1neg,
+    SD0:
+      value > -1 && value < 1
+        ? {
+            sum: totals.SD0.sum + 1,
+            events: { ...totals.SD0.events, [event.id]: event }
+          }
+        : totals.SD0,
+    SD1:
+      value >= 1 && value < 2
+        ? {
+            sum: totals.SD1.sum + 1,
+            events: { ...totals.SD1.events, [event.id]: event }
+          }
+        : totals.SD1,
+    SD2:
+      value >= 2 && value < 3
+        ? {
+            sum: totals.SD2.sum + 1,
+            events: { ...totals.SD2.events, [event.id]: event }
+          }
+        : totals.SD2,
+    SD3:
+      value >= 3
+        ? {
+            sum: totals.SD3.sum + 1,
+            events: { ...totals.SD3.events, [event.id]: event }
+          }
+        : totals.SD3
   });
 
   skipEvent = (event, sortOrder, msg) => ({
@@ -148,8 +190,9 @@ class Mainpage extends React.Component {
           }
         }
 
-        acc.events[event.event] = {
+        const mappedEvent = {
           index,
+          id: event.event,
           eventDate,
           ageInDays,
           muac,
@@ -164,11 +207,13 @@ class Mainpage extends React.Component {
           completedBy: event.completedBy
         };
 
-        const visitWfl = acc.events[event.event].wfl;
-        const visitWfa = acc.events[event.event].wfa;
-        const visitLhfa = acc.events[event.event].lhfa;
-        const visitBfa = acc.events[event.event].bfa;
-        const visitAcfa = acc.events[event.event].acfa;
+        acc.events[event.event] = mappedEvent;
+
+        const visitWfl = mappedEvent.wfl;
+        const visitWfa = mappedEvent.wfa;
+        const visitLhfa = mappedEvent.lhfa;
+        const visitBfa = mappedEvent.bfa;
+        const visitAcfa = mappedEvent.acfa;
 
         // TODO: Change time based on time between selected dates.
         // 12 months = 1 month accumulation
@@ -223,11 +268,11 @@ class Mainpage extends React.Component {
         };
 
         acc.totals = {
-          wfl: this.addVisitToTotals(visitWfl, acc.totals.wfl),
-          wfa: this.addVisitToTotals(visitWfa, acc.totals.wfa),
-          lhfa: this.addVisitToTotals(visitLhfa, acc.totals.lhfa),
-          bfa: this.addVisitToTotals(visitBfa, acc.totals.bfa),
-          acfa: this.addVisitToTotals(visitAcfa, acc.totals.acfa)
+          wfl: this.addVisitToTotals(visitWfl, acc.totals.wfl, mappedEvent),
+          wfa: this.addVisitToTotals(visitWfa, acc.totals.wfa, mappedEvent),
+          lhfa: this.addVisitToTotals(visitLhfa, acc.totals.lhfa, mappedEvent),
+          bfa: this.addVisitToTotals(visitBfa, acc.totals.bfa, mappedEvent),
+          acfa: this.addVisitToTotals(visitAcfa, acc.totals.acfa, mappedEvent)
         };
 
         const roundedWfl = Math.round(visitWfl * 10) / 10;
@@ -278,49 +323,154 @@ class Mainpage extends React.Component {
         },
         totals: {
           wfl: {
-            SD3neg: 0,
-            SD2neg: 0,
-            SD1neg: 0,
-            SD0: 0,
-            SD1: 0,
-            SD2: 0,
-            SD3: 0
+            SD3neg: {
+              sum: 0,
+              events: {}
+            },
+            SD2neg: {
+              sum: 0,
+              events: {}
+            },
+            SD1neg: {
+              sum: 0,
+              events: {}
+            },
+            SD0: {
+              sum: 0,
+              events: {}
+            },
+            SD1: {
+              sum: 0,
+              events: {}
+            },
+            SD2: {
+              sum: 0,
+              events: {}
+            },
+            SD3: {
+              sum: 0,
+              events: {}
+            }
           },
           wfa: {
-            SD3neg: 0,
-            SD2neg: 0,
-            SD1neg: 0,
-            SD0: 0,
-            SD1: 0,
-            SD2: 0,
-            SD3: 0
+            SD3neg: {
+              sum: 0,
+              events: {}
+            },
+            SD2neg: {
+              sum: 0,
+              events: {}
+            },
+            SD1neg: {
+              sum: 0,
+              events: {}
+            },
+            SD0: {
+              sum: 0,
+              events: {}
+            },
+            SD1: {
+              sum: 0,
+              events: {}
+            },
+            SD2: {
+              sum: 0,
+              events: {}
+            },
+            SD3: {
+              sum: 0,
+              events: {}
+            }
           },
           lhfa: {
-            SD3neg: 0,
-            SD2neg: 0,
-            SD1neg: 0,
-            SD0: 0,
-            SD1: 0,
-            SD2: 0,
-            SD3: 0
+            SD3neg: {
+              sum: 0,
+              events: {}
+            },
+            SD2neg: {
+              sum: 0,
+              events: {}
+            },
+            SD1neg: {
+              sum: 0,
+              events: {}
+            },
+            SD0: {
+              sum: 0,
+              events: {}
+            },
+            SD1: {
+              sum: 0,
+              events: {}
+            },
+            SD2: {
+              sum: 0,
+              events: {}
+            },
+            SD3: {
+              sum: 0,
+              events: {}
+            }
           },
           bfa: {
-            SD3neg: 0,
-            SD2neg: 0,
-            SD1neg: 0,
-            SD0: 0,
-            SD1: 0,
-            SD2: 0,
-            SD3: 0
+            SD3neg: {
+              sum: 0,
+              events: {}
+            },
+            SD2neg: {
+              sum: 0,
+              events: {}
+            },
+            SD1neg: {
+              sum: 0,
+              events: {}
+            },
+            SD0: {
+              sum: 0,
+              events: {}
+            },
+            SD1: {
+              sum: 0,
+              events: {}
+            },
+            SD2: {
+              sum: 0,
+              events: {}
+            },
+            SD3: {
+              sum: 0,
+              events: {}
+            }
           },
           acfa: {
-            SD3neg: 0,
-            SD2neg: 0,
-            SD1neg: 0,
-            SD0: 0,
-            SD1: 0,
-            SD2: 0,
-            SD3: 0
+            SD3neg: {
+              sum: 0,
+              events: {}
+            },
+            SD2neg: {
+              sum: 0,
+              events: {}
+            },
+            SD1neg: {
+              sum: 0,
+              events: {}
+            },
+            SD0: {
+              sum: 0,
+              events: {}
+            },
+            SD1: {
+              sum: 0,
+              events: {}
+            },
+            SD2: {
+              sum: 0,
+              events: {}
+            },
+            SD3: {
+              sum: 0,
+              events: {}
+            }
           }
         },
         distribution: {

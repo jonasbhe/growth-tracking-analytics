@@ -34,8 +34,7 @@ class Results extends React.Component {
             color: '#777777'
           }}
         >
-          Showing results for {Object.values(events).length} events from{' '}
-          {ouName}
+          Results for {Object.values(events).length} events from {ouName}
         </div>
 
         <div
