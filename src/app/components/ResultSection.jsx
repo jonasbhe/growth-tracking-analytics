@@ -97,7 +97,7 @@ class ResultSection extends React.Component {
     reason: msg
   });
 
-  mapEvents = (trackedEntityInstances, events, startDate, filter) => {
+  mapEvents = (trackedEntityInstances, events, startDate, endDate, filter) => {
     const { gender, filterSd, minAge, maxAge } = filter;
 
     if (
@@ -229,47 +229,46 @@ class ResultSection extends React.Component {
         const visitBfa = mappedEvent.bfa;
         const visitAcfa = mappedEvent.acfa;
 
-        // TODO: Change time based on time between selected dates.
-        // 12 months = 1 month accumulation
-        // 6 months = 1 month accumulation
-        // 3 months = 2 week accumulation
-        // 1 month = 1 week accumulation
-        const day = Math.floor(
-          (Date.parse(event.eventDate) - Date.parse(startDate)) / 2592000000
+        const period = Math.floor(
+          Math.abs(
+            (Date.parse(event.eventDate) -
+              Date.parse(
+                new Date(startDate.getFullYear(), startDate.getMonth(), 1)
+              )) /
+              2592000000
+          )
         );
 
         acc.timeline = {
-          weekly: {
-            wfl: {
-              ...acc.timeline.weekly.wfl,
-              [day]: acc.timeline.weekly.wfl[day]
-                ? [...acc.timeline.weekly.wfl[day], visitWfl]
-                : [visitWfl]
-            },
-            wfa: {
-              ...acc.timeline.weekly.wfa,
-              [day]: acc.timeline.weekly.wfa[day]
-                ? [...acc.timeline.weekly.wfa[day], visitWfa]
-                : [visitWfa]
-            },
-            lhfa: {
-              ...acc.timeline.weekly.lhfa,
-              [day]: acc.timeline.weekly.lhfa[day]
-                ? [...acc.timeline.weekly.lhfa[day], visitLhfa]
-                : [visitLhfa]
-            },
-            bfa: {
-              ...acc.timeline.weekly.bfa,
-              [day]: acc.timeline.weekly.bfa[day]
-                ? [...acc.timeline.weekly.bfa[day], visitBfa]
-                : [visitBfa]
-            },
-            acfa: {
-              ...acc.timeline.weekly.acfa,
-              [day]: acc.timeline.weekly.acfa[day]
-                ? [...acc.timeline.weekly.acfa[day], visitAcfa]
-                : [visitAcfa]
-            }
+          wfl: {
+            ...acc.timeline.wfl,
+            [period]: acc.timeline.wfl[period]
+              ? [...acc.timeline.wfl[period], visitWfl]
+              : [visitWfl]
+          },
+          wfa: {
+            ...acc.timeline.wfa,
+            [period]: acc.timeline.wfa[period]
+              ? [...acc.timeline.wfa[period], visitWfa]
+              : [visitWfa]
+          },
+          lhfa: {
+            ...acc.timeline.lhfa,
+            [period]: acc.timeline.lhfa[period]
+              ? [...acc.timeline.lhfa[period], visitLhfa]
+              : [visitLhfa]
+          },
+          bfa: {
+            ...acc.timeline.bfa,
+            [period]: acc.timeline.bfa[period]
+              ? [...acc.timeline.bfa[period], visitBfa]
+              : [visitBfa]
+          },
+          acfa: {
+            ...acc.timeline.acfa,
+            [period]: acc.timeline.acfa[period]
+              ? [...acc.timeline.acfa[period], visitAcfa]
+              : [visitAcfa]
           }
         };
 
@@ -496,7 +495,11 @@ class ResultSection extends React.Component {
         },
         skipped: {},
         timeline: {
-          weekly: { wfa: 0, wfl: 0, lhfa: 0, bfa: 0, acfa: 0 }
+          wfa: 0,
+          wfl: 0,
+          lhfa: 0,
+          bfa: 0,
+          acfa: 0
         }
       }
     );
@@ -543,7 +546,13 @@ class ResultSection extends React.Component {
     } = result;
 
     const teiData = this.mapTrackedEntityInstances(trackedEntityInstances);
-    const eventData = this.mapEvents(teiData, events, startDate, filter);
+    const eventData = this.mapEvents(
+      teiData,
+      events,
+      startDate,
+      endDate,
+      filter
+    );
 
     return (
       <div

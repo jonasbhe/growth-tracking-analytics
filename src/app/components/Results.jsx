@@ -135,7 +135,7 @@ class Results extends React.Component {
             averages={averages.wfa}
             totals={totals.wfa}
             max={Object.values(events).length}
-            timeline={timeline.weekly.wfa}
+            timeline={timeline.wfa}
             ouName={ouName}
             startDate={startDate}
             endDate={endDate}
@@ -154,7 +154,7 @@ class Results extends React.Component {
             averages={averages.wfl}
             totals={totals.wfl}
             max={Object.values(events).length}
-            timeline={timeline.weekly.wfl}
+            timeline={timeline.wfl}
             ouName={ouName}
             startDate={startDate}
             endDate={endDate}
@@ -172,7 +172,7 @@ class Results extends React.Component {
             averages={averages.lhfa}
             totals={totals.lhfa}
             max={Object.values(events).length}
-            timeline={timeline.weekly.lhfa}
+            timeline={timeline.lhfa}
             ouName={ouName}
             startDate={startDate}
             endDate={endDate}
@@ -190,7 +190,7 @@ class Results extends React.Component {
             averages={averages.bfa}
             totals={totals.bfa}
             max={Object.values(events).length}
-            timeline={timeline.weekly.bfa}
+            timeline={timeline.bfa}
             ouName={ouName}
             startDate={startDate}
             endDate={endDate}
@@ -208,7 +208,7 @@ class Results extends React.Component {
             averages={averages.acfa}
             totals={totals.acfa}
             max={Object.values(events).length}
-            timeline={timeline.weekly.acfa}
+            timeline={timeline.acfa}
             ouName={ouName}
             startDate={startDate}
             endDate={endDate}
