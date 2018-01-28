@@ -19,7 +19,9 @@ class Results extends React.Component {
       endDate,
       gender,
       minAge,
-      maxAge
+      maxAge,
+      toggleCompare,
+      clearCompare
     } = this.props;
     const { showSkipped } = this.state;
 
@@ -35,13 +37,33 @@ class Results extends React.Component {
     if (Object.values(averages).length === 0) return null;
 
     return (
-      <div id="printable">
-        <Button
-          label="Print results"
-          onClick={() => window.print()}
-          small
-          style={{ marginLeft: 10, float: 'left' }}
-        />
+      <div id={clearCompare ? 'not-printable' : 'printable'}>
+        {!clearCompare && (
+          <Button
+            label="Print results"
+            onClick={() => window.print()}
+            small
+            style={{ marginLeft: 10, float: 'left' }}
+          />
+        )}
+
+        {toggleCompare && (
+          <Button
+            label="Compare results"
+            onClick={toggleCompare}
+            small
+            style={{ marginLeft: 10, float: 'left' }}
+          />
+        )}
+
+        {clearCompare && (
+          <Button
+            label="Close comparison"
+            onClick={clearCompare}
+            small
+            style={{ marginLeft: 10, float: 'left' }}
+          />
+        )}
 
         <div
           style={{

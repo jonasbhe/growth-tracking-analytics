@@ -11,44 +11,14 @@ import {
 } from '../../formulas/zFormulas';
 
 class ResultSection extends React.Component {
-  state = {
-    eventData: null,
-    teiData: null
-  };
-
-  componentWillMount() {
-    const {
-      trackedEntityInstances,
-      events,
-      startDate,
-      filter
-    } = this.props.result;
-
-    console.time('a');
-    console.time('b');
-    const teiData = this.mapTrackedEntityInstances(trackedEntityInstances);
-    console.timeEnd('b');
-    const eventData = this.mapEvents(teiData, events, startDate, filter);
-    console.timeEnd('a');
-
-    this.setState({ eventData, teiData });
+  shouldComponentUpdate(nextProps) {
+    return (
+      this.props.result.ouName !== nextProps.result.ouName ||
+      this.props.result.filter !== nextProps.result.filter ||
+      this.props.result.startDate !== nextProps.result.startDate ||
+      this.props.result.endDate !== nextProps.result.endDate
+    );
   }
-
-  componentWillUpdate(nextProps) {
-    if (
-      JSON.stringify(this.props.result.filter) !==
-      JSON.stringify(nextProps.result.filter)
-    ) {
-      const { events, startDate, filter } = nextProps.result;
-      const { teiData } = this.state;
-      this.updateEventData(teiData, events, startDate, filter);
-    }
-  }
-
-  updateEventData = (teiData, events, startDate, filter) => {
-    const eventData = this.mapEvents(teiData, events, startDate, filter);
-    this.setState({ eventData });
-  };
 
   addVisitToTotals = (value, totals, event) => {
     if (value >= 3) {
@@ -560,13 +530,20 @@ class ResultSection extends React.Component {
   };
 
   render() {
-    const { result } = this.props;
-    const { eventData } = this.state;
+    const { result, toggleCompare, clearCompare } = this.props;
     const { gender, minAge, maxAge } = result.filter;
 
-    const { ouName, startDate, endDate } = result;
+    const {
+      ouName,
+      startDate,
+      endDate,
+      events,
+      filter,
+      trackedEntityInstances
+    } = result;
 
-    console.log(eventData.totals);
+    const teiData = this.mapTrackedEntityInstances(trackedEntityInstances);
+    const eventData = this.mapEvents(teiData, events, startDate, filter);
 
     return (
       <div
@@ -582,6 +559,8 @@ class ResultSection extends React.Component {
           gender={gender}
           minAge={minAge}
           maxAge={maxAge}
+          toggleCompare={toggleCompare}
+          clearCompare={clearCompare}
         />
       </div>
     );

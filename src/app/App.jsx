@@ -15,6 +15,7 @@ import Sidebar from './components/Sidebar.jsx';
 import ResultSection from './components/ResultSection.jsx';
 import SearchSection from './components/SearchSection.jsx';
 import Filter from './components/Filter.jsx';
+import Button from './components/Button.jsx';
 
 const HeaderBar = withStateFrom(headerBarStore$, HeaderBarComponent);
 
@@ -24,17 +25,16 @@ injectTapEventPlugin();
 
 class App extends React.Component {
   state = {
-    ou: ['hV87OCHgO4v'],
-    ouPath: [
-      '/Hjw70Lodtf2/psfB4ksRKp2/DG8h5ijGxgO/sFGfRP4wPqe/oiAbfOiho08/hV87OCHgO4v'
-    ],
+    ou: [],
+    ouPath: [],
     ouName: null,
     ouLevel: null,
     root: null,
     startDate: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
     endDate: new Date(),
     loading: false,
-    result: null
+    result: null,
+    compareResult: null
   };
 
   getChildContext() {
@@ -117,6 +117,16 @@ class App extends React.Component {
   updateFilter = filter =>
     this.setState(state => ({ result: { ...state.result, filter } }));
 
+  updateCompareFilter = filter =>
+    this.setState(state => ({
+      compareResult: { ...state.compareResult, filter }
+    }));
+
+  toggleCompare = () =>
+    this.setState({ result: null, compareResult: this.state.result });
+
+  clearCompare = () => this.setState({ compareResult: null });
+
   render() {
     const {
       root,
@@ -126,7 +136,8 @@ class App extends React.Component {
       startDate,
       endDate,
       result,
-      loading
+      loading,
+      compareResult
     } = this.state;
 
     if (!root) return null;
@@ -169,54 +180,104 @@ class App extends React.Component {
                 loading={loading}
               />
 
-              {loading ? (
-                <div>
-                  <div
-                    style={{
-                      textAlign: 'center',
-                      fontSize: '2rem',
-                      color: '#777777'
-                    }}
-                  >
-                    Loading...
-                  </div>
-                  <LoadingMask
-                    style={{
-                      left: 'unset',
-                      position: 'unset',
-                      justifyContent: 'center',
-                      textAlign: 'center'
-                    }}
-                  />
-                </div>
-              ) : (
-                <div>
-                  {result &&
-                    result.events.length > 0 && (
-                      <div>
-                        <Filter updateFilter={this.updateFilter} />
-
-                        <hr style={{ border: '1px solid #f3f3f3' }} />
-
-                        <ResultSection result={result} />
-                      </div>
-                    )}
-
-                  {result &&
-                    result.events.length === 0 && (
+              <div style={{ display: 'flex' }}>
+                <div style={{ flex: '1' }}>
+                  {loading ? (
+                    <div>
                       <div
                         style={{
                           textAlign: 'center',
-                          fontSize: '2.5rem',
-                          margin: 10,
+                          fontSize: '2rem',
                           color: '#777777'
                         }}
                       >
-                        No results found for {result.ouName}
+                        Loading...
                       </div>
-                    )}
+                      <LoadingMask
+                        style={{
+                          left: 'unset',
+                          position: 'unset',
+                          justifyContent: 'center',
+                          textAlign: 'center'
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div>
+                      {result &&
+                        result.events.length > 0 && (
+                          <div>
+                            <Filter updateFilter={this.updateFilter} />
+
+                            <hr style={{ border: '1px solid #f3f3f3' }} />
+
+                            <ResultSection
+                              result={result}
+                              toggleCompare={this.toggleCompare}
+                            />
+                          </div>
+                        )}
+
+                      {result &&
+                        result.events.length === 0 && (
+                          <div
+                            style={{
+                              textAlign: 'center',
+                              fontSize: '2rem',
+                              margin: 10,
+                              padding: 30,
+                              color: '#777777'
+                            }}
+                          >
+                            No results found for {result.ouName}
+                          </div>
+                        )}
+
+                      {!result &&
+                        compareResult && (
+                          <div
+                            style={{
+                              textAlign: 'center',
+                              fontSize: '2.5rem',
+                              margin: 10,
+                              color: '#777777'
+                            }}
+                          >
+                            Select an organisation unit to compare with
+                          </div>
+                        )}
+                    </div>
+                  )}
                 </div>
-              )}
+                {compareResult &&
+                  compareResult.events.length > 0 && (
+                    <div style={{ flex: '1' }}>
+                      <Filter updateFilter={this.updateCompareFilter} />
+
+                      <hr style={{ border: '1px solid #f3f3f3' }} />
+
+                      <ResultSection
+                        result={compareResult}
+                        clearCompare={this.clearCompare}
+                      />
+                    </div>
+                  )}
+
+                {compareResult &&
+                  compareResult.events.length === 0 && (
+                    <div
+                      style={{
+                        flex: '1',
+                        textAlign: 'center',
+                        fontSize: '2.5rem',
+                        margin: 10,
+                        color: '#777777'
+                      }}
+                    >
+                      No results found for {compareResult.ouName}
+                    </div>
+                  )}
+              </div>
             </div>
           </div>
         </div>
