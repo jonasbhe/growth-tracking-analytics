@@ -141,6 +141,7 @@ class Filter extends React.Component {
         <div style={{ textAlign: 'center' }}>
           <Button
             label="Apply filter"
+            small
             onClick={() => updateFilter(this.state)}
           />
         </div>

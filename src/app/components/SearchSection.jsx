@@ -69,6 +69,7 @@ const SearchSection = ({
           backgroundColor:
             !ouName || ouLevel < 4 || loading ? '#9c9c9c' : '#296596'
         }}
+        small
         disabled={!ouName || ouLevel < 4 || loading}
       />
     </div>
