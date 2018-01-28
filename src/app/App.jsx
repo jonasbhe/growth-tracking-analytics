@@ -180,7 +180,7 @@ class App extends React.Component {
               />
 
               <div style={{ display: 'flex' }}>
-                <div style={{ flex: '1' }}>
+                <div style={{ flex: '1', width: '100%' }}>
                   {loading ? (
                     <div>
                       <div
@@ -250,7 +250,7 @@ class App extends React.Component {
                 </div>
                 {compareResult &&
                   compareResult.events.length > 0 && (
-                    <div style={{ flex: '1' }}>
+                    <div style={{ flex: '1', width: '100%' }}>
                       <Filter updateFilter={this.updateCompareFilter} />
 
                       <hr style={{ border: '1px solid #f3f3f3' }} />
@@ -267,6 +267,7 @@ class App extends React.Component {
                     <div
                       style={{
                         flex: '1',
+                        width: '100%',
                         textAlign: 'center',
                         fontSize: '2.5rem',
                         margin: 10,
