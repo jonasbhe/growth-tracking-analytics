@@ -24,7 +24,7 @@ class Filter extends React.Component {
 
     return (
       <div>
-        <div>
+        <div style={{ textAlign: 'center' }}>
           <div style={{ margin: 10 }}>
             <div
               style={{
@@ -38,6 +38,7 @@ class Filter extends React.Component {
             <Button
               label="Female"
               onClick={() => this.setGenderFilter('female')}
+              small
               style={{
                 margin: 5,
                 backgroundColor: gender === 'female' ? '#296596' : '#9c9c9c'
@@ -47,6 +48,7 @@ class Filter extends React.Component {
             <Button
               label="Male"
               onClick={() => this.setGenderFilter('male')}
+              small
               style={{
                 margin: 5,
                 backgroundColor: gender === 'male' ? '#296596' : '#9c9c9c'
@@ -56,6 +58,7 @@ class Filter extends React.Component {
             <Button
               label="Both"
               onClick={() => this.setGenderFilter('both')}
+              small
               style={{
                 margin: 5,
                 backgroundColor: gender === 'both' ? '#296596' : '#9c9c9c'
@@ -72,28 +75,46 @@ class Filter extends React.Component {
             >
               Filter by age (in months)
             </div>
-            Min:
-            <input
-              style={{
-                height: 25,
-                fontSize: '1.5rem',
-                width: '10%'
-              }}
-              type="number"
-              value={minAge}
-              onChange={event => this.setMinAge(event.target.value)}
-            />
-            Max:
-            <input
-              style={{
-                height: 25,
-                fontSize: '1.5rem',
-                width: '10%'
-              }}
-              type="number"
-              value={maxAge}
-              onChange={event => this.setMaxAge(event.target.value)}
-            />
+
+            <div style={{ display: 'flex', margin: '0 auto', width: '25%' }}>
+              <div
+                style={{
+                  fontSize: '0.9rem',
+                  color: '#777777'
+                }}
+              >
+                Min:
+                <input
+                  style={{
+                    height: 20,
+                    fontSize: '1.3rem',
+                    width: '50%'
+                  }}
+                  type="number"
+                  value={minAge}
+                  onChange={event => this.setMinAge(event.target.value)}
+                />
+              </div>
+
+              <div
+                style={{
+                  fontSize: '0.9rem',
+                  color: '#777777'
+                }}
+              >
+                Max:
+                <input
+                  style={{
+                    height: 20,
+                    fontSize: '1.3rem',
+                    width: '50%'
+                  }}
+                  type="number"
+                  value={maxAge}
+                  onChange={event => this.setMaxAge(event.target.value)}
+                />
+              </div>
+            </div>
           </div>
 
           <div style={{ margin: 10 }}>
@@ -107,9 +128,9 @@ class Filter extends React.Component {
             </div>
             <input
               style={{
-                height: 25,
-                fontSize: '1.5rem',
-                width: '10%'
+                height: 20,
+                fontSize: '1.3rem',
+                width: '5%'
               }}
               type="number"
               value={filterSd}
