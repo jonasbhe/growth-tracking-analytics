@@ -3,6 +3,8 @@ import ReactHighcharts from 'react-highcharts';
 import HighchartsExporting from 'highcharts-exporting';
 import HighchartsOfflineExporting from 'highcharts-offline-exporting';
 
+import getColor from '../../formulas/getColor';
+
 HighchartsExporting(ReactHighcharts.Highcharts);
 HighchartsOfflineExporting(ReactHighcharts.Highcharts);
 
@@ -65,31 +67,31 @@ const DistributionChart = ({
         zones: [
           {
             value: -2.9,
-            color: '#777777'
+            color: getColor(3)
           },
           {
             value: -1.9,
-            color: '#ff7070'
+            color: getColor(2)
           },
           {
             value: -0.9,
-            color: '#dede32'
+            color: getColor(1)
           },
           {
             value: 1,
-            color: '#BADA55'
+            color: getColor(0)
           },
           {
             value: 2,
-            color: '#dede32'
+            color: getColor(1)
           },
           {
             value: 3,
-            color: '#ff7070'
+            color: getColor(2)
           },
           {
             value: 1000,
-            color: '#777777'
+            color: getColor(3)
           }
         ],
 
