@@ -1,10 +1,6 @@
 import React from 'react';
-import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
 
-import Datepicker from './Datepicker.jsx';
 import Results from './Results.jsx';
-import Filter from './Filter.jsx';
-import Button from './Button.jsx';
 
 import {
   getWeightForLength,
@@ -14,67 +10,115 @@ import {
   getMUACForAge
 } from '../../formulas/zFormulas';
 
-class Mainpage extends React.Component {
+class ResultSection extends React.Component {
   state = {
-    gender: 'both',
-    filterSd: 5,
-    minAge: 0,
-    maxAge: 24
+    eventData: null,
+    teiData: null
   };
 
-  updateFilter = filter => this.setState({ ...filter });
+  componentWillMount() {
+    const {
+      trackedEntityInstances,
+      events,
+      startDate,
+      filter
+    } = this.props.result;
 
-  addVisitToTotals = (value, totals, event) => ({
-    SD3neg:
-      value <= -3
-        ? {
-            sum: totals.SD3neg.sum + 1,
-            events: { ...totals.SD3neg.events, [event.id]: event }
-          }
-        : totals.SD3neg,
-    SD2neg:
-      value > -3 && value <= -2
-        ? {
-            sum: totals.SD2neg.sum + 1,
-            events: { ...totals.SD2neg.events, [event.id]: event }
-          }
-        : totals.SD2neg,
-    SD1neg:
-      value > -2 && value <= -1
-        ? {
-            sum: totals.SD1neg.sum + 1,
-            events: { ...totals.SD1neg.events, [event.id]: event }
-          }
-        : totals.SD1neg,
-    SD0:
-      value > -1 && value < 1
-        ? {
-            sum: totals.SD0.sum + 1,
-            events: { ...totals.SD0.events, [event.id]: event }
-          }
-        : totals.SD0,
-    SD1:
-      value >= 1 && value < 2
-        ? {
-            sum: totals.SD1.sum + 1,
-            events: { ...totals.SD1.events, [event.id]: event }
-          }
-        : totals.SD1,
-    SD2:
-      value >= 2 && value < 3
-        ? {
-            sum: totals.SD2.sum + 1,
-            events: { ...totals.SD2.events, [event.id]: event }
-          }
-        : totals.SD2,
-    SD3:
-      value >= 3
-        ? {
-            sum: totals.SD3.sum + 1,
-            events: { ...totals.SD3.events, [event.id]: event }
-          }
-        : totals.SD3
-  });
+    console.time('a');
+    console.time('b');
+    const teiData = this.mapTrackedEntityInstances(trackedEntityInstances);
+    console.timeEnd('b');
+    const eventData = this.mapEvents(teiData, events, startDate, filter);
+    console.timeEnd('a');
+
+    this.setState({ eventData, teiData });
+  }
+
+  componentWillUpdate(nextProps) {
+    if (
+      JSON.stringify(this.props.result.filter) !==
+      JSON.stringify(nextProps.result.filter)
+    ) {
+      const { events, startDate, filter } = nextProps.result;
+      const { teiData } = this.state;
+      this.updateEventData(teiData, events, startDate, filter);
+    }
+  }
+
+  updateEventData = (teiData, events, startDate, filter) => {
+    const eventData = this.mapEvents(teiData, events, startDate, filter);
+    this.setState({ eventData });
+  };
+
+  addVisitToTotals = (value, totals, event) => {
+    if (value >= 3) {
+      return {
+        ...totals,
+        SD3: {
+          sum: totals.SD3.sum + 1,
+          events: totals.SD3.events.add(event.id)
+        }
+      };
+    }
+
+    if (value > 2) {
+      return {
+        ...totals,
+        SD2: {
+          sum: totals.SD2.sum + 1,
+          events: totals.SD2.events.add(event.id)
+        }
+      };
+    }
+
+    if (value > 1) {
+      return {
+        ...totals,
+        SD1: {
+          sum: totals.SD1.sum + 1,
+          events: totals.SD1.events.add(event.id)
+        }
+      };
+    }
+
+    if (value > -1) {
+      return {
+        ...totals,
+        SD0: {
+          sum: totals.SD0.sum + 1,
+          events: totals.SD0.events.add(event.id)
+        }
+      };
+    }
+
+    if (value > -2) {
+      return {
+        ...totals,
+        SD1neg: {
+          sum: totals.SD1neg.sum + 1,
+          events: totals.SD1neg.events.add(event.id)
+        }
+      };
+    }
+
+    if (value > -3) {
+      return {
+        ...totals,
+        SD2neg: {
+          sum: totals.SD2neg.sum + 1,
+          events: totals.SD2neg.events.add(event.id)
+        }
+      };
+    }
+
+    return {
+      ...totals,
+      SD3neg: {
+        sum: totals.SD3neg.sum + 1,
+        events: totals.SD3neg.events.add(event.id)
+      }
+    };
+  };
 
   skipEvent = (event, sortOrder, msg) => ({
     id: event.event,
@@ -83,9 +127,8 @@ class Mainpage extends React.Component {
     reason: msg
   });
 
-  mapEvents = trackedEntityInstances => {
-    const { events, startDate, endDate } = this.props;
-    const { gender, filterSd, minAge, maxAge } = this.state;
+  mapEvents = (trackedEntityInstances, events, startDate, filter) => {
+    const { gender, filterSd, minAge, maxAge } = filter;
 
     if (
       !trackedEntityInstances ||
@@ -326,151 +369,151 @@ class Mainpage extends React.Component {
           wfl: {
             SD3neg: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD2neg: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD1neg: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD0: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD1: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD2: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD3: {
               sum: 0,
-              events: {}
+              events: new Set()
             }
           },
           wfa: {
             SD3neg: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD2neg: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD1neg: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD0: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD1: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD2: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD3: {
               sum: 0,
-              events: {}
+              events: new Set()
             }
           },
           lhfa: {
             SD3neg: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD2neg: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD1neg: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD0: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD1: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD2: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD3: {
               sum: 0,
-              events: {}
+              events: new Set()
             }
           },
           bfa: {
             SD3neg: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD2neg: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD1neg: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD0: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD1: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD2: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD3: {
               sum: 0,
-              events: {}
+              events: new Set()
             }
           },
           acfa: {
             SD3neg: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD2neg: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD1neg: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD0: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD1: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD2: {
               sum: 0,
-              events: {}
+              events: new Set()
             },
             SD3: {
               sum: 0,
-              events: {}
+              events: new Set()
             }
           }
         },
@@ -489,9 +532,7 @@ class Mainpage extends React.Component {
     );
   };
 
-  mapTrackedEntityInstances = () => {
-    const { trackedEntityInstances } = this.props;
-
+  mapTrackedEntityInstances = trackedEntityInstances => {
     if (!trackedEntityInstances) return null;
 
     return trackedEntityInstances.reduce((acc, value) => {
@@ -519,135 +560,32 @@ class Mainpage extends React.Component {
   };
 
   render() {
-    const {
-      ouName,
-      ouLevel,
-      startDate,
-      setStartDate,
-      endDate,
-      setEndDate,
-      getEvents,
-      loading
-    } = this.props;
-    const { gender, minAge, maxAge } = this.state;
+    const { result } = this.props;
+    const { eventData } = this.state;
+    const { gender, minAge, maxAge } = result.filter;
 
-    const trackedEntityInstances = this.mapTrackedEntityInstances();
-    const eventData = this.mapEvents(trackedEntityInstances);
+    const { ouName, startDate, endDate } = result;
+
+    console.log(eventData.totals);
 
     return (
       <div
         style={{
-          width: '100%',
-          overflow: 'auto'
+          width: '100%'
         }}
       >
-        <div
-          style={{
-            textAlign: 'center',
-            fontSize: '2.5rem',
-            margin: 10,
-            color: '#777777'
-          }}
-        >
-          Growth Tracking Analytics App
-        </div>
-
-        <hr style={{ border: '1px solid #f3f3f3' }} />
-
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            flexWrap: 'wrap'
-          }}
-        >
-          <Datepicker
-            label="Start date:"
-            date={startDate}
-            setDate={setStartDate}
-          />
-
-          <Datepicker label="End date:" date={endDate} setDate={setEndDate} />
-        </div>
-
-        <div
-          style={{
-            textAlign: 'center',
-            fontSize: '1.8rem',
-            margin: 10,
-            color: '#777777'
-          }}
-        >
-          {!ouName
-            ? 'Choose an organization unit.'
-            : ouLevel < 4 ? 'Choose a lower level organisation unit.' : ouName}
-        </div>
-
-        <div
-          style={{
-            textAlign: 'center',
-            marginBottom: 10
-          }}
-        >
-          <Button
-            label="Get events"
-            onClick={getEvents}
-            style={{
-              backgroundColor:
-                !ouName || ouLevel < 4 || loading ? '#9c9c9c' : '#296596'
-            }}
-            disabled={!ouName || ouLevel < 4 || loading}
-          />
-        </div>
-
-        <hr style={{ border: '1px solid #f3f3f3' }} />
-
-        {loading && (
-          <div>
-            <div
-              style={{
-                textAlign: 'center',
-                fontSize: '2rem',
-                color: '#777777'
-              }}
-            >
-              Loading...
-            </div>
-            <LoadingMask
-              style={{
-                left: 'unset',
-                position: 'unset',
-                justifyContent: 'center',
-                textAlign: 'center'
-              }}
-            />
-          </div>
-        )}
-
-        {!loading &&
-          Object.values(eventData).length > 0 && (
-            <div>
-              <Filter updateFilter={this.updateFilter} />
-
-              <hr style={{ border: '1px solid #f3f3f3' }} />
-
-              <Results
-                eventData={eventData}
-                ouName={ouName}
-                startDate={startDate}
-                endDate={endDate}
-                gender={gender}
-                minAge={minAge}
-                maxAge={maxAge}
-              />
-            </div>
-          )}
-
-        {!loading &&
-          Object.values(eventData).length === 0 && <div>No events found.</div>}
+        <Results
+          eventData={eventData}
+          ouName={ouName}
+          startDate={startDate}
+          endDate={endDate}
+          gender={gender}
+          minAge={minAge}
+          maxAge={maxAge}
+        />
       </div>
     );
   }
 }
 
-export default Mainpage;
+export default ResultSection;

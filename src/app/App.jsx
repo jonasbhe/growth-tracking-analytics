@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import LoadingMask from 'd2-ui/lib/loading-mask/LoadingMask.component';
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
@@ -11,7 +12,9 @@ import headerBarStore$ from 'd2-ui/lib/app-header/headerBar.store';
 import withStateFrom from 'd2-ui/lib/component-helpers/withStateFrom';
 
 import Sidebar from './components/Sidebar.jsx';
-import Mainpage from './components/Mainpage.jsx';
+import ResultSection from './components/ResultSection.jsx';
+import SearchSection from './components/SearchSection.jsx';
+import Filter from './components/Filter.jsx';
 
 const HeaderBar = withStateFrom(headerBarStore$, HeaderBarComponent);
 
@@ -30,7 +33,8 @@ class App extends React.Component {
     root: null,
     startDate: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
     endDate: new Date(),
-    loading: false
+    loading: false,
+    result: null
   };
 
   getChildContext() {
@@ -88,8 +92,19 @@ class App extends React.Component {
     Promise.all([events, trackedEntityInstances]).then(result => {
       // Disable loading indicator here
       this.setState({
-        events: result[0],
-        trackedEntityInstances: result[1],
+        result: {
+          events: result[0],
+          trackedEntityInstances: result[1],
+          ouName: this.state.ouName,
+          startDate: this.state.startDate,
+          endDate: this.state.endDate,
+          filter: {
+            gender: 'both',
+            filterSd: 5,
+            minAge: 0,
+            maxAge: 24
+          }
+        },
         loading: false
       });
     });
@@ -99,16 +114,18 @@ class App extends React.Component {
 
   setEndDate = endDate => this.setState({ endDate: endDate[0] });
 
+  updateFilter = filter =>
+    this.setState(state => ({ result: { ...state.result, filter } }));
+
   render() {
     const {
       root,
       ouPath,
       ouName,
       ouLevel,
-      events,
-      trackedEntityInstances,
       startDate,
       endDate,
+      result,
       loading
     } = this.state;
 
@@ -140,18 +157,67 @@ class App extends React.Component {
               onSelectClick={this.onSelectClick}
               ouPath={ouPath}
             />
-            <Mainpage
-              ouName={ouName}
-              ouLevel={ouLevel}
-              events={events}
-              trackedEntityInstances={trackedEntityInstances}
-              startDate={startDate}
-              endDate={endDate}
-              setStartDate={this.setStartDate}
-              setEndDate={this.setEndDate}
-              getEvents={this.getEvents}
-              loading={loading}
-            />
+            <div style={{ flex: '1', display: 'block', overflow: 'auto' }}>
+              <SearchSection
+                ouName={ouName}
+                ouLevel={ouLevel}
+                startDate={startDate}
+                endDate={endDate}
+                setStartDate={this.setStartDate}
+                setEndDate={this.setEndDate}
+                getEvents={this.getEvents}
+                loading={loading}
+              />
+
+              {loading ? (
+                <div>
+                  <div
+                    style={{
+                      textAlign: 'center',
+                      fontSize: '2rem',
+                      color: '#777777'
+                    }}
+                  >
+                    Loading...
+                  </div>
+                  <LoadingMask
+                    style={{
+                      left: 'unset',
+                      position: 'unset',
+                      justifyContent: 'center',
+                      textAlign: 'center'
+                    }}
+                  />
+                </div>
+              ) : (
+                <div>
+                  {result &&
+                    result.events.length > 0 && (
+                      <div>
+                        <Filter updateFilter={this.updateFilter} />
+
+                        <hr style={{ border: '1px solid #f3f3f3' }} />
+
+                        <ResultSection result={result} />
+                      </div>
+                    )}
+
+                  {result &&
+                    result.events.length === 0 && (
+                      <div
+                        style={{
+                          textAlign: 'center',
+                          fontSize: '2.5rem',
+                          margin: 10,
+                          color: '#777777'
+                        }}
+                      >
+                        No results found for {result.ouName}
+                      </div>
+                    )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </MuiThemeProvider>

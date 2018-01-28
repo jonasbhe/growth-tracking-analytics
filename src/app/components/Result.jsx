@@ -250,9 +250,7 @@ class Result extends React.Component {
                 textAlign: 'center'
               }}
             >
-              Showing event IDs in SD range {showVisitsLabel} ({
-                Object.values(showVisits).length
-              }){' '}
+              Showing event IDs in SD range {showVisitsLabel} ({showVisits.size}){' '}
               <Button
                 label="Hide"
                 onClick={() => this.toggleVisits(null, null)}
@@ -269,9 +267,7 @@ class Result extends React.Component {
                 flexWrap: 'wrap'
               }}
             >
-              {Object.keys(showVisits).map(id => (
-                <div key={id}>{id}&nbsp;</div>
-              ))}
+              {[...showVisits].map(id => <div key={id}>{id}&nbsp;</div>)}
             </div>
           </div>
         )}
