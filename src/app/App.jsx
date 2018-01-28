@@ -15,7 +15,6 @@ import Sidebar from './components/Sidebar.jsx';
 import ResultSection from './components/ResultSection.jsx';
 import SearchSection from './components/SearchSection.jsx';
 import Filter from './components/Filter.jsx';
-import Button from './components/Button.jsx';
 
 const HeaderBar = withStateFrom(headerBarStore$, HeaderBarComponent);
 

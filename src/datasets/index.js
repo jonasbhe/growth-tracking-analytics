@@ -20,8 +20,6 @@ import bfaGirls from './Centile_Tables/bfaGirls.js';
 import acfaBoys from './Centile_Tables/acfaBoys.js';
 import acfaGirls from './Centile_Tables/acfaGirls.js';
 
-import { defaultConfig, descriptions } from './defaultConfig';
-
 const sdSets = {
   wflBoysSd,
   wflGirlsSd,
@@ -48,4 +46,4 @@ const centileSets = {
   acfaGirls,
 };
 
-export { sdSets, centileSets, defaultConfig, descriptions };
+export { sdSets, centileSets };

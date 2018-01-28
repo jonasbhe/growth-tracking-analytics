@@ -9,6 +9,7 @@ import {
   getBMIForAge,
   getMUACForAge
 } from '../../formulas/zFormulas';
+import dataElementIds from '../../dataElementIds';
 
 class ResultSection extends React.Component {
   shouldComponentUpdate(nextProps) {
@@ -145,13 +146,13 @@ class ResultSection extends React.Component {
         }
 
         const muacRaw = event.dataValues.find(
-          val => val.dataElement === 'ySphlmZ7fKG'
+          val => val.dataElement === dataElementIds.muac
         );
         const weightRaw = event.dataValues.find(
-          val => val.dataElement === 'KHyKhpRfVRS'
+          val => val.dataElement === dataElementIds.weight
         );
         const heightRaw = event.dataValues.find(
-          val => val.dataElement === 'VCYJkaP96KZ'
+          val => val.dataElement === dataElementIds.height
         );
 
         const muac = muacRaw && Number(muacRaw.value);
@@ -510,16 +511,16 @@ class ResultSection extends React.Component {
 
     return trackedEntityInstances.reduce((acc, value) => {
       const firstname = value.attributes.find(
-        attr => attr.attribute === 'kim8r9m1oGE'
+        attr => attr.attribute === dataElementIds.firstname
       );
       const lastname = value.attributes.find(
-        attr => attr.attribute === 'blDEf5Ld0fA'
+        attr => attr.attribute === dataElementIds.lastname
       );
       const gender = value.attributes.find(
-        attr => attr.attribute === 'uMSSNRDVcXS'
+        attr => attr.attribute === dataElementIds.gender
       );
       const birthdate = value.attributes.find(
-        attr => attr.attribute === 'yj8BaYdkTA6'
+        attr => attr.attribute === dataElementIds.birthdate
       );
 
       acc[value.trackedEntityInstance] = {

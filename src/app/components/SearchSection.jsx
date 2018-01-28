@@ -53,7 +53,7 @@ const SearchSection = ({
     >
       {!ouName
         ? 'Choose an organization unit.'
-        : ouLevel < 4 ? 'Choose a lower level organisation unit.' : ouName}
+        : ouLevel < 3 ? 'Choose a lower level organisation unit.' : ouName}
     </div>
 
     <div
@@ -67,10 +67,10 @@ const SearchSection = ({
         onClick={getEvents}
         style={{
           backgroundColor:
-            !ouName || ouLevel < 4 || loading ? '#9c9c9c' : '#296596'
+            !ouName || ouLevel < 3 || loading ? '#9c9c9c' : '#296596'
         }}
         small
-        disabled={!ouName || ouLevel < 4 || loading}
+        disabled={!ouName || ouLevel < 3 || loading}
       />
     </div>
 
