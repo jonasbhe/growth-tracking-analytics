@@ -16,6 +16,8 @@ import ResultSection from './components/ResultSection.jsx';
 import SearchSection from './components/SearchSection.jsx';
 import Filter from './components/Filter.jsx';
 
+import { program } from './../constants.js';
+
 const HeaderBar = withStateFrom(headerBarStore$, HeaderBarComponent);
 
 // Needed for onTouchTap
@@ -76,7 +78,7 @@ class App extends React.Component {
       ou &&
       this.props.d2.Api.getApi()
         .get(
-          `events.json?orgUnit=${ou}&program=U1xZvvCVWIM&ouMode=DESCENDANTS&startDate=${start}&endDate=${end}&skipPaging=true&skipMeta=true`
+          `events.json?orgUnit=${ou}&program=${program}&ouMode=DESCENDANTS&startDate=${start}&endDate=${end}&skipPaging=true&skipMeta=true`
         )
         .then(result => result.events.filter(event => event.completedDate));
 
@@ -84,7 +86,7 @@ class App extends React.Component {
       ou &&
       this.props.d2.Api.getApi()
         .get(
-          `trackedEntityInstances.json?ou=${ou}&ouMode=DESCENDANTS&program=U1xZvvCVWIM&skipPaging=true&skipMeta=true`
+          `trackedEntityInstances.json?ou=${ou}&ouMode=DESCENDANTS&program=${program}&skipPaging=true&skipMeta=true`
         )
         .then(result => result.trackedEntityInstances);
 
