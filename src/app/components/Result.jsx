@@ -123,7 +123,7 @@ class Result extends React.Component {
             </div>
             <TotalRow
               index={1}
-              label="- to -3"
+              label="> to -3"
               total={totals.SD3neg}
               max={max}
               toggleVisits={this.toggleVisits}
@@ -165,7 +165,7 @@ class Result extends React.Component {
             />
             <TotalRow
               index={7}
-              label="3 to -"
+              label="3 to <"
               total={totals.SD3}
               max={max}
               toggleVisits={this.toggleVisits}
