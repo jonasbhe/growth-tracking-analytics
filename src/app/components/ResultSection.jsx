@@ -123,8 +123,8 @@ class ResultSection extends React.Component {
         }
 
         // Filter results based on selected gender
-        if (patient.gender === 'Male' && gender === 'female') return acc;
-        if (patient.gender === 'Female' && gender === 'male') return acc;
+        if (!patient.gender && gender === 'female') return acc;
+        if (patient.gender && gender === 'male') return acc;
 
         const eventDate = new Date(event.eventDate);
 
@@ -526,7 +526,7 @@ class ResultSection extends React.Component {
       acc[value.trackedEntityInstance] = {
         firstname: firstname ? firstname.value : null,
         lastname: lastname ? lastname.value : null,
-        gender: gender ? gender.value : null,
+        gender: gender ? gender.value === 'Female' : null,
         birthdate: birthdate ? birthdate.value : null
       };
       return acc;
