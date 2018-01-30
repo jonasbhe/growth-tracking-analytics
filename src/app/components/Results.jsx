@@ -34,7 +34,21 @@ class Results extends React.Component {
       timeline
     } = eventData;
 
-    if (Object.values(averages).length === 0) return null;
+    if (Object.values(events).length === 0)
+      return (
+        <div
+          style={{
+            flex: '1',
+            width: '100%',
+            textAlign: 'center',
+            fontSize: '2.5rem',
+            margin: 10,
+            color: '#777777'
+          }}
+        >
+          No results found.
+        </div>
+      );
 
     return (
       <div id={clearCompare ? 'not-printable' : 'printable'}>

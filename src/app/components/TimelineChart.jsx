@@ -62,7 +62,8 @@ const TimelineChart = ({
       crosshair: true,
       title: {
         text: 'Month'
-      }
+      },
+      type: 'category'
     },
     yAxis: {
       crosshair: true,

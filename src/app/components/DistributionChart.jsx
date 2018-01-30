@@ -48,7 +48,8 @@ const DistributionChart = ({
       max: Math.abs(distributionMin),
       title: {
         text: 'Z-score'
-      }
+      },
+      tickInterval: 0.5
     },
     yAxis: {
       title: {
