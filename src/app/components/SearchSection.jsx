@@ -22,7 +22,7 @@ const SearchSection = ({
       style={{
         textAlign: 'center',
         fontSize: '2.5rem',
-        margin: 10,
+        marginTop: 5,
         color: '#777777'
       }}
     >
@@ -47,7 +47,7 @@ const SearchSection = ({
       style={{
         textAlign: 'center',
         fontSize: '1.8rem',
-        margin: 10,
+        margin: 5,
         color: '#777777'
       }}
     >
@@ -59,7 +59,7 @@ const SearchSection = ({
     <div
       style={{
         textAlign: 'center',
-        marginBottom: 10
+        marginBottom: 5
       }}
     >
       <Button

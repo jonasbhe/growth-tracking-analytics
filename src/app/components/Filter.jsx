@@ -24,7 +24,13 @@ class Filter extends React.Component {
 
     return (
       <div>
-        <div style={{ textAlign: 'center' }}>
+        <div
+          style={{
+            textAlign: 'center',
+            display: 'flex',
+            justifyContent: 'center'
+          }}
+        >
           <div style={{ margin: 10 }}>
             <div
               style={{
@@ -76,7 +82,7 @@ class Filter extends React.Component {
               Filter by age (in months)
             </div>
 
-            <div style={{ display: 'flex', margin: '0 auto', width: '25%' }}>
+            <div style={{ display: 'flex', margin: '0 auto', width: '50%' }}>
               <div
                 style={{
                   fontSize: '0.9rem',
@@ -130,7 +136,7 @@ class Filter extends React.Component {
               style={{
                 height: 20,
                 fontSize: '1.3rem',
-                width: '5%'
+                width: '50%'
               }}
               type="number"
               value={filterSd}

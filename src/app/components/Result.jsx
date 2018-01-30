@@ -58,7 +58,7 @@ class Result extends React.Component {
         <div
           style={{
             fontSize: '2.2rem',
-            margin: 10,
+            margin: 30,
             color: '#777777',
             textAlign: 'center'
           }}
