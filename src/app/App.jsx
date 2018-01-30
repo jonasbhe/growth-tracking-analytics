@@ -45,16 +45,11 @@ class App extends React.Component {
   }
 
   componentWillMount() {
-    this.props.d2.models.organisationUnits
-      .list({
-        paging: false,
-        level: 1,
-        fields: 'id,path,displayName,children::isNotEmpty'
-      })
-      .then(rootLevel => rootLevel.toArray()[0])
-      .then(root => {
-        this.setState({ root });
+    this.props.d2.currentUser.getDataViewOrganisationUnits().then(root => {
+      this.setState({
+        root: root.valuesContainerMap.entries().next().value[1]
       });
+    });
   }
 
   onSelectClick = (event, ou) => {
