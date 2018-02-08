@@ -99,7 +99,7 @@ class ResultSection extends React.Component {
   });
 
   mapEvents = (trackedEntityInstances, events, startDate, endDate, filter) => {
-    const { gender, filterSd, minAge, maxAge } = filter;
+    const { gender, filterSd, minAge, maxAge, ubudeheCategory } = filter;
 
     if (
       !trackedEntityInstances ||
@@ -122,6 +122,17 @@ class ResultSection extends React.Component {
           return acc;
         }
 
+        if (ubudeheCategory && patient.ubudehe !== ubudeheCategory) {
+          acc.skipped[event.event] = this.skipEvent(
+            event,
+            1,
+            `Patient is not part of the selected ubudehe category ${
+              patient.ubudehe
+            }`
+          );
+          return acc;
+        }
+
         // Filter results based on selected gender
         if (!patient.gender && gender === 'female') return acc;
         if (patient.gender && gender === 'male') return acc;
@@ -137,7 +148,7 @@ class ResultSection extends React.Component {
         if (ageInDays / 30.25 < minAge || ageInDays / 30.25 > maxAge) {
           acc.skipped[event.event] = this.skipEvent(
             event,
-            1,
+            2,
             `Patient data is outside of specified age range. (${Math.round(
               ageInDays / 30.25 * 100
             ) / 100} months)`
@@ -163,7 +174,7 @@ class ResultSection extends React.Component {
         if (!muac || !height || !weight) {
           acc.skipped[event.event] = this.skipEvent(
             event,
-            2,
+            3,
             'The event is missing muac, height, or weight.'
           );
           return acc;
@@ -181,7 +192,7 @@ class ResultSection extends React.Component {
         if (!rawWfl || !rawWfa || !rawLhfa) {
           acc.skipped[event.event] = this.skipEvent(
             event,
-            3,
+            4,
             'The event does not have valid data to calculate WFL, WFA, or LHFA with.'
           );
           return acc;
@@ -198,7 +209,7 @@ class ResultSection extends React.Component {
           ) {
             acc.skipped[event.event] = this.skipEvent(
               event,
-              4,
+              5,
               `The event has an indicator outside of the given SD max range (${filterSd})`
             );
             return acc;
@@ -522,12 +533,16 @@ class ResultSection extends React.Component {
       const birthdate = value.attributes.find(
         attr => attr.attribute === teiElementIds.birthdate
       );
+      const ubudehe = value.attributes.find(
+        attr => attr.attribute === teiElementIds.ubudehe
+      );
 
       acc[value.trackedEntityInstance] = {
         firstname: firstname ? firstname.value : null,
         lastname: lastname ? lastname.value : null,
         gender: gender ? gender.value === 'Female' : null,
-        birthdate: birthdate ? birthdate.value : null
+        birthdate: birthdate ? birthdate.value : null,
+        ubudehe: ubudehe ? ubudehe.value : null
       };
       return acc;
     }, {});

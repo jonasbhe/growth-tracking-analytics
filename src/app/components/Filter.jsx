@@ -7,7 +7,8 @@ class Filter extends React.Component {
     gender: 'both',
     filterSd: 5,
     minAge: 0,
-    maxAge: 24
+    maxAge: 24,
+    ubudeheCategory: null
   };
 
   setGenderFilter = gender => this.setState({ gender });
@@ -18,9 +19,11 @@ class Filter extends React.Component {
 
   setMaxAge = maxAge => this.setState({ maxAge });
 
+  setUbudehe = category => this.setState({ ubudeheCategory: category });
+
   render() {
     const { updateFilter } = this.props;
-    const { gender, filterSd, minAge, maxAge } = this.state;
+    const { gender, filterSd, minAge, maxAge, ubudeheCategory } = this.state;
 
     return (
       <div>
@@ -68,6 +71,47 @@ class Filter extends React.Component {
               style={{
                 margin: 5,
                 backgroundColor: gender === 'both' ? '#296596' : '#9c9c9c'
+              }}
+            />
+          </div>
+
+          <div style={{ margin: 10 }}>
+            <div
+              style={{
+                fontSize: '1.2rem',
+                color: '#777777'
+              }}
+            >
+              Filter by ubudehe category
+            </div>
+
+            <Button
+              label="Category 1"
+              onClick={() => this.setUbudehe('1')}
+              small
+              style={{
+                margin: 5,
+                backgroundColor: ubudeheCategory === '1' ? '#296596' : '#9c9c9c'
+              }}
+            />
+
+            <Button
+              label="Category 2"
+              onClick={() => this.setUbudehe('2')}
+              small
+              style={{
+                margin: 5,
+                backgroundColor: ubudeheCategory === '2' ? '#296596' : '#9c9c9c'
+              }}
+            />
+
+            <Button
+              label="Both"
+              onClick={() => this.setUbudehe(null)}
+              small
+              style={{
+                margin: 5,
+                backgroundColor: !ubudeheCategory ? '#296596' : '#9c9c9c'
               }}
             />
           </div>
