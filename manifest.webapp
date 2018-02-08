@@ -1,0 +1,20 @@
+{
+  "launch_path": "index.html",
+  "default_locale": "en",
+  "activities": {
+    "dhis": {
+      "href": "*"
+    }
+  },
+  "appType": "APP",
+  "name": "FBF Analytics",
+  "version": "1.0",
+  "description": "Growth tracking analytics for DHIS",
+  "developer": {
+    "name": "J"
+  },
+  "icons": {
+    "48": "icon.png"
+  },
+  "manifest_generated_at": "Thu Feb 08 2018 16:16:18 GMT+0100 (W. Europe Standard Time)"
+}
