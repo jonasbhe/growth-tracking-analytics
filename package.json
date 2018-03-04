@@ -9,7 +9,7 @@
     "prebuild": "(rm -r build && mkdir build) || mkdir build",
     "build": "webpack",
     "postbuild":
-      "cp index.html build/ && cp icon.png build/ && cp node_modules/jquery/dist/jquery.min.js build/ && cp node_modules/babel-polyfill/dist/polyfill.min.js build/ && cp manifest.webapp build/ && cd build && zip -r FBF_Analytics.zip *",
+      "cp index.html build/ && cp icon.png build/ && cp node_modules/jquery/dist/jquery.min.js build/ && cp node_modules/babel-polyfill/dist/polyfill.min.js build/ && cp manifest.webapp build/ && cd build && zip -r FBF_Analytics_60_months.zip *",
     "test":
       "mocha --reporter spec --compilers js:babel-core/register --require config/setup.js --recursive test",
     "test-watch":
